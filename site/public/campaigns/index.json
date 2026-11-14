@@ -1,7 +1,0 @@
-{
-  "campaigns": [
-    { "id": "insight", "file": "insight.json", "status": "full" },
-    { "id": "spirit", "file": "spirit.json", "status": "full" },
-    { "id": "surveyor3", "file": "surveyor3.json", "status": "short" }
-  ]
-}

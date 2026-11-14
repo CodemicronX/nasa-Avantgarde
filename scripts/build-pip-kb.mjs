@@ -5,10 +5,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const rd = (p) => fs.readFileSync(path.join(root, p), 'utf8');
-const { OBJECTS, PLACE_LABEL } = await import('../src/data/objects.js');
-const { FACTORS } = await import('../src/data/factors.js');
-const { PREVENTION, STATS, DECAY, DATA_SOURCES, CHALLENGE_RESOURCES } = await import('../src/data/prevention.js');
-const { MISSIONS } = await import('../src/moon/missions.js');
+const { OBJECTS, PLACE_LABEL } = await import('../site/src/data/objects.js');
+const { FACTORS } = await import('../site/src/data/factors.js');
+const { PREVENTION, STATS, DECAY, DATA_SOURCES, CHALLENGE_RESOURCES } = await import('../site/src/data/prevention.js');
+const { MISSIONS } = await import('../site/src/moon/missions.js');
 
 const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
 const strip = (h) => clean(h.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<svg[\s\S]*?<\/svg>/g, ' ').replace(/<[^>]+>/g, ' ')
