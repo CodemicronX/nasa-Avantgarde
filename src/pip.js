@@ -7,7 +7,7 @@ const SECTIONS = {
   story: {side:'right', pose: 'cheer', line: 'Story time! Moon and Mars only - watch the globe switch worlds and pin each landing site.'},
   catalog: {side: 'left', pose:'point', line:'Welcome to the museum of left-behind things. Tap any card to open its story file.'},
   atlas: {side:'right', pose: 'think', line:'These pins sit on real NASA maps. Can you find Tranquility Base, where Apollo 11 landed??'},
-  lab: {side: 'left', pose: 'jump', line: '3D lab!! Spin the hardware like a real engineer. Some models come straight from NASA.'},
+  lab: {side: 'left', pose: 'cheer', line: '3D lab!! Spin the hardware like a real engineer. Some models come straight from NASA.'},
   orbit: {side:'right', pose:'think', line:'Around Earth it gets crowded: thousands of pieces of old hardware are still circling.'},
   why: {side: 'left', pose: 'think', line: 'Why do missions end? Dust, cold nights, lost signals... and sometimes one tiiny mistake.'},
   numbers: {side:'right', pose:'point', line:'Big numbers! Every one of these is a reason to plan for the end of a mission.'},
@@ -26,7 +26,7 @@ const SVG = `
       <line x1="80" y1="30" x2="80" y2="12" stroke="#5a47c4" stroke-width="3"/>
       <circle class="pp-light" cx="80" cy="10" r="6" fill="#a9a5f3"/>
       <g class="pp-arm-l"><path d="M42 118 q-20 8 -22 28" stroke="#b4aef2" stroke-width="9" fill="none" stroke-linecap="round"/></g>
-      <g class="pp-arm-r"><path d="M118 118 q20 8 22 28" stroke="#b4aef2" stroke-width="9" fill="none" stroke-linecap="round"/></g>
+      <g class="pp-arm-r"><path class="pp-wave" d="M118 118 q20 8 22 28" stroke="#b4aef2" stroke-width="9" fill="none" stroke-linecap="round"/></g>
       <rect x="44" y="108" width="72" height="54" rx="22" fill="url(#pipB)" stroke="#8f88e0" stroke-width="1.5"/>
       <rect x="62" y="124" width="36" height="14" rx="5" fill="#5a47c4"/>
       <text x="80" y="134.5" font-size="9" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-weight="700" fill="#ffffff">PIP</text>
@@ -54,29 +54,47 @@ export function initPip(){
     <button class="pip-btn" type="button" aria-haspopup="dialog" aria-label="Pip, your guide. Press to ask Pip a question. Drag to move; double-tap to send Pip home.">${SVG}<span class="pip-ask" aria-hidden="true">Ask</span></button>`;
   document.body.appendChild(root);
   const bubble = root.querySelector('.pip-bubble'), textEl = root.querySelector('.pip-text'), btn = root.querySelector('.pip-btn');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const ids = Object.keys(SECTIONS).filter((id) => id === 'hero' || document.getElementById(id));
-  const sectionEl = (id) => (id === 'hero' ? document.querySelector('.hero') : document.getElementById(id));
+  const waveHand = root.querySelector('.pp-wave');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const sections = new Map(Object.keys(SECTIONS).map((id) => [id,
+    id === 'hero' ? document.querySelector('.hero') : document.getElementById(id),
+  ]).filter(([, section]) => section));
+  const dock = document.getElementById('pip-dock');
+  const pos = {x: 0, y: 0, scale: 1};
+  const target = {x: 0, y: 0, scale: 1};
+  let current = null, talkT, hideT, wave, enabled = false, docked = false;
 
-  let current = null, lastLine = '', typeT = null, hideT = null, enabled = false;
-  const pos = {x: 0, y: 0, s: 1, r: 0}, target = {x: 0, y: 0, s: 1, r:0};
-  let lastScroll = scrollY, lean = 0;
+  function setPose(pose) {
+    root.dataset.pose = pose;
+    if (pose === 'wave' && !reducedMotion.matches && wave?.playState !== 'running') {
+      wave = waveHand.animate({transform: ['rotate(0deg)', 'rotate(14deg)', 'rotate(-14deg)', 'rotate(0deg)'],
+        easing: 'ease-in-out'}, {duration: 750, iterations: 2});
+    }
+  }
+  reducedMotion.addEventListener('change', () => {
+    if (reducedMotion.matches) {
+      wave?.cancel();
+      root.classList.remove('talking');
+    }
+    scheduleFrame();
+  });
 
-  function setPose(p) {root.dataset.pose = p;}
+  function hideSpeech() {
+    clearTimeout(talkT);
+    clearTimeout(hideT);
+    bubble.classList.remove('show');
+    root.classList.remove('talking');
+  }
+
   function say(text, mood, {sticky = false} = {}) {
-    lastLine = text;
     if (mood) setPose(mood);
-    clearInterval(typeT); clearTimeout(hideT);
-    bubble.classList.add('show'); root.classList.add('talking');
-    // restart the pop animation
-    bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
-    if (reduce) {textEl.textContent = text; root.classList.remove('talking');}
-    else {
-      let i = 0; textEl.textContent = '';
-      typeT = setInterval(() => {
-        i += 2; textEl.textContent = text.slice(0, i);
-        if (i >= text.length) {clearInterval(typeT); root.classList.remove('talking');}
-      }, 22);
+    clearTimeout(talkT);
+    clearTimeout(hideT);
+    textEl.textContent = text;
+    bubble.classList.add('show');
+    if (!reducedMotion.matches) {
+      root.classList.add('talking');
+      talkT = setTimeout(() => root.classList.remove('talking'), text.length * 11);
     }
     const mob = root.classList.contains('mobile');
     const ms = Math.max(mob ? 3800 : 4500, text.length * (mob ? 45 : 55));
@@ -85,9 +103,10 @@ export function initPip(){
 
   const chat = initPipChat({onOpenChange: (open) => {
     root.classList.toggle('chatting', open);
-    if (open) bubble.classList.remove('show');
+    if (open) hideSpeech();
   }});
-  const sideNow = () => (pos.x + 48 > document.documentElement.clientWidth / 2 ? 'right' : 'left');
+  const sizeNow = () => (root.classList.contains('mobile') ? 56 : 96);
+  const sideNow = () => (pos.x + sizeNow() * pos.scale / 2 > document.documentElement.clientWidth / 2 ? 'right' : 'left');
 
   // drag pip (mouse + touch)
   let dragged = null; // where user put him
@@ -95,15 +114,15 @@ export function initPip(){
     const d = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
     if (d && Number.isFinite(d.x) && Number.isFinite(d.y)) dragged = d;
   } catch {}
-  const sizeNow = () => (root.classList.contains('mobile') ? 56 : 96);
-  const clamp = (p) => {
-    const vw = document.documentElement.clientWidth, vh = innerHeight, sz = sizeNow();
-    return {x: Math.min(Math.max(4, p.x), vw - sz - 4), y: Math.min(Math.max(64, p.y), vh - sz - 4)};
+  const clamp = (p, size = sizeNow()) => {
+    const maxX = Math.max(4, document.documentElement.clientWidth - size - 4);
+    const maxY = Math.max(4, innerHeight - size - 4);
+    return {x: Math.min(Math.max(4, p.x), maxX), y: Math.min(Math.max(64, p.y), maxY)};
   };
-  let drag = null, lastTap = 0, tapT = 0;
+  let drag = null, lastTap = -Infinity, tapT;
 
   btn.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || drag) return;
     drag = {id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: pos.x, oy: pos.y, moved: false};
     btn.setPointerCapture(e.pointerId);
   });
@@ -111,113 +130,161 @@ export function initPip(){
     if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
     if (!drag.moved && Math.hypot(dx, dy) < 7) return; // small move = still a tap
-    if (!drag.moved) {drag.moved = true; root.classList.add('dragging'); bubble.classList.remove('show');}
-    dragged = clamp({x: drag.ox + dx, y: drag.oy + dy});
-    pos.x = target.x = dragged.x; pos.y = target.y = dragged.y; pos.s = target.s = 1;
+    if (!drag.moved) {
+      drag.moved = true;
+      lastTap = -Infinity;
+      clearTimeout(tapT);
+      root.classList.add('dragging');
+      hideSpeech();
+    }
+    dragged = clamp({x: drag.ox + dx, y: drag.oy + dy}, sizeNow() * pos.scale);
+    Object.assign(pos, dragged);
+    scheduleFrame();
   });
   const endDrag = (e) => {
     if (!drag || e.pointerId !== drag.id) return;
     const moved = drag.moved; drag = null; root.classList.remove('dragging');
     if (moved) {
       try {localStorage.setItem(POS_KEY, JSON.stringify(dragged));} catch {}
-      root.dataset.side = sideNow();
       btn.dataset.justDragged = '1';
       setTimeout(() => delete btn.dataset.justDragged, 0);
     }
+    scheduleUpdate();
   };
   btn.addEventListener('pointerup', endDrag);
   btn.addEventListener('pointercancel', endDrag);
+  btn.addEventListener('lostpointercapture', endDrag);
 
   btn.addEventListener('click', (e) => {
     if (btn.dataset.justDragged) return;
+    if (e.detail === 0) {chat.toggle(sideNow()); return;}
     const now = performance.now();
     // double click -> send pip home
-    if (e.detail !== 0 && now - lastTap < 320) {
-      clearTimeout(tapT); lastTap = 0; dragged = null;
+    if (now - lastTap < 320) {
+      clearTimeout(tapT); lastTap = -Infinity; dragged = null;
       try {localStorage.removeItem(POS_KEY);} catch {}
-      update(); say('Back to my spot! I`ll follow you again.', 'cheer'); return;
+      scheduleUpdate();
+      if (!chat.isOpen()) say('Back to my spot! I`ll follow you again.', 'cheer');
+      return;
     }
     lastTap = now;
-    if (e.detail === 0) {chat.toggle(sideNow()); return;} // keyboard enter
-    clearTimeout(tapT); tapT = setTimeout(() => chat.toggle(sideNow()), 260);
+    tapT = setTimeout(() => chat.toggle(sideNow()), 320);
   });
-  document.addEventListener('pip:say', (e) => {if (enabled && !chat.isOpen()) say(e.detail.text, e.detail.mood);});
+  document.addEventListener('pip:say', (e) => {
+    if (enabled && !drag && !chat.isOpen() && (!e.detail.section || e.detail.section === current)) {
+      say(e.detail.text, e.detail.mood);
+    }
+  });
 
   function activeSection() {
-    const mid = innerHeight * 0.45; let best = 'hero';
-    if (scrollY + innerHeight >= document.documentElement.scrollHeight - 4) return ids[ids.length - 1];
-    for (const id of ids) {
-      const el = sectionEl(id); if (!el) continue;
-      const r = el.getBoundingClientRect();
-      if (r.top <= mid && r.bottom > mid) best = id;
+    const mid = innerHeight * 0.45;
+    if (sections.has('sources') && scrollY + innerHeight >= document.documentElement.scrollHeight - 4) return 'sources';
+    const active = sections.get(current)?.getBoundingClientRect();
+    // Small scroll and layout shifts at a boundary should keep the current section.
+    if (active && active.top <= mid + 24 && active.bottom > mid - 24) return current;
+    for (const [id, section] of sections) {
+      const {top, bottom} = section.getBoundingClientRect();
+      if (top <= mid && bottom > mid) return id;
     }
-    return best;
+    return current || 'hero';
   }
 
   function computeTarget() {
     const vw = document.documentElement.clientWidth, vh = innerHeight, mobile = vw < 900;
     const size = mobile ? 56 : 96;
     root.classList.toggle('mobile', mobile);
-    if (dragged) { // user moved him, so he stays there
-      if (!drag) dragged = clamp(dragged);
-      target.x = dragged.x; target.y = dragged.y; target.s = 1;
-      root.dataset.side = dragged.x + size / 2 > vw / 2 ? 'right' : 'left'; return;
+    if (dragged) {
+      docked = false;
+      Object.assign(target, clamp(dragged, size), {scale: 1});
+      return;
     }
-    const id = current || 'hero', cfg = SECTIONS[id];
-    // on the moon section pip sits in his dock
-    const dock = document.getElementById('pip-dock');
-    if (!mobile && id === 'moon' && dock) {
+    if (vw > 1100 && current === 'moon' && dock) {
       const r = dock.getBoundingClientRect();
-      if (r.top < vh * 0.5 && r.bottom > vh * 0.55) {
-        const sc = Math.min(1.7, r.width / size);
-        target.x = r.left + r.width / 2 - (size * sc) / 2;
-        target.y = Math.max(r.top + 170, Math.min(r.bottom - size * sc * 1.2 - 10, vh * 0.42));
-        target.s = sc;
-        root.dataset.side = 'dock'; return;
+      const tolerance = docked ? 24 : 0;
+      if (r.top < vh * 0.5 + tolerance && r.bottom > vh * 0.55 - tolerance) {
+        const scale = Math.min(1.7, r.width / size);
+        const x = r.left + (r.width - size * scale) / 2;
+        const y = Math.min(r.bottom - size * scale - 64, Math.max(r.top + 144, vh * 0.48));
+        docked = true;
+        Object.assign(target, clamp({x, y}, size * scale), {scale});
+        return;
       }
     }
-    target.s = 1;
-    root.dataset.side = cfg.side;
-    const margin = mobile ? -8 : Math.max(12, Math.min(40, (vw - 1240) / 2 - size));
-    target.x = cfg.side === 'right' ? vw - size - margin : margin;
-    if (mobile) {target.y = vh - size - 10; return;}
-    // goes down slowly while you read the section
-    const el = sectionEl(id), r = el.getBoundingClientRect();
-    const prog = Math.min(1, Math.max(0, (vh * 0.45 - r.top) / Math.max(1, r.height)));
-    target.y = vh * (0.3 + 0.45 * prog);
+    const side = mobile ? 'right' : SECTIONS[current].side;
+    docked = false;
+    const margin = mobile ? 12 : Math.max(12, Math.min(40, (vw - 1240) / 2 - size));
+    const x = side === 'right' ? vw - size - margin : margin;
+    const y = mobile ? vh - size - 10 : vh * 0.57;
+    Object.assign(target, clamp({x, y}, size), {scale: 1});
   }
 
   function update() {
+    if (drag) return;
     const id = activeSection();
     if (id !== current) {
       current = id;
       if (enabled && !chat.isOpen()) say(SECTIONS[id].line, SECTIONS[id].pose);
+      else root.dataset.pose = SECTIONS[id].pose;
     }
     computeTarget();
   }
 
-  let fc = 0;
-  function frame() {
-    if ((fc++ & 3) === 0) update(); // check every 4 frames, sections load lazy
-    const k = reduce || drag ? 1 : 0.12;
-    const v = scrollY - lastScroll; lastScroll = scrollY;
-    lean += (Math.max(-12, Math.min(12, v * 0.6)) - lean) * 0.15; // tilt when scrolling
-    pos.x += (target.x - pos.x) * k; pos.y += (target.y - pos.y) * k; pos.s += (target.s - pos.s) * k;
+  function paint() {
     root.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
-    root.style.setProperty('--s', pos.s.toFixed(3));
-    root.style.setProperty('--lean', `${(reduce ? 0 : lean).toFixed(1)}deg`);
-    requestAnimationFrame(frame);
+    root.style.setProperty('--s', pos.scale.toFixed(3));
+    root.style.setProperty('--pip-x', `${pos.x.toFixed(1)}px`);
+    const side = sideNow();
+    if (root.dataset.side !== side) root.dataset.side = side;
   }
 
-  addEventListener('scroll', update, {passive: true});
-  addEventListener('resize', update);
-  update(); pos.x = target.x; pos.y = target.y + 120; pos.s = target.s;
-  requestAnimationFrame(frame);
+  let dirty = false, frameId = 0, lastFrame = 0;
+  function scheduleFrame() {
+    if (!frameId) frameId = requestAnimationFrame(frame);
+  }
+  function scheduleUpdate() {
+    dirty = true;
+    scheduleFrame();
+  }
+
+  function frame(now) {
+    frameId = 0;
+    if (dirty) {
+      dirty = false;
+      update();
+    }
+    let moving = false;
+    if (!drag) {
+      // Use elapsed time so the travel speed is independent of the display refresh rate.
+      const dt = lastFrame ? Math.min(now - lastFrame, 50) : 16;
+      const blend = reducedMotion.matches ? 1 : 1 - Math.exp(-dt / 180);
+      for (const key of ['x', 'y', 'scale']) {
+        const distance = target[key] - pos[key];
+        const limit = key === 'scale' ? Infinity : dt * 1.4;
+        if (Math.abs(distance) < 0.01 || reducedMotion.matches) {
+          pos[key] = target[key];
+        } else {
+          pos[key] += Math.sign(distance) * Math.min(Math.abs(distance) * blend, limit);
+          moving = true;
+        }
+      }
+    }
+    paint();
+    lastFrame = moving ? now : 0;
+    if (moving) scheduleFrame();
+  }
+
+  addEventListener('scroll', scheduleUpdate, {passive: true});
+  addEventListener('resize', scheduleUpdate);
+  const layout = new ResizeObserver(scheduleUpdate);
+  for (const section of sections.values()) layout.observe(section);
+  if (dock) layout.observe(dock);
+  update(); Object.assign(pos, target); paint();
 
   return {
     start() {
-      enabled = true; root.classList.remove('hidden');
       current = activeSection(); computeTarget();
+      Object.assign(pos, target); paint();
+      enabled = true; root.classList.remove('hidden');
       say(SECTIONS[current].line, SECTIONS[current].pose);
     },
     say,
