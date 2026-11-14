@@ -1,5 +1,5 @@
-Aidar
-Begaiym
-Medina
-Marles
-Nika
+Aidar - Team Lead
+Begaiym - Speaker 1
+Medina - Speaker 2
+Marles - Coder
+Nika - Main Designer
