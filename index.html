@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Стартовый проект сайта на Node.js и Vite."
+    />
+    <title>Мой сайт</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="На главную">Мой сайт</a>
+        <nav aria-label="Основная навигация">
+          <a href="#about">О проекте</a>
+          <a href="#start">Начать</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Node.js · Vite</p>
+          <h1>Основа для твоего сайта</h1>
+          <p class="intro">
+            Здесь уже есть всё необходимое, чтобы начать разработку. Измени
+            эту страницу и создай что-то своё.
+          </p>
+          <a class="button" href="#start">Поехали</a>
+        </section>
+
+        <section class="details" id="about">
+          <h2>Простой старт</h2>
+          <p>
+            Редактируй файлы в папке <code>src</code>. Vite обновит страницу
+            автоматически, а готовую сборку можно будет развернуть на хостинге.
+          </p>
+        </section>
+
+        <section class="details" id="start">
+          <h2>Команды</h2>
+          <ul>
+            <li><code>npm run dev</code> — запустить режим разработки</li>
+            <li><code>npm run build</code> — собрать сайт для публикации</li>
+            <li><code>npm run preview</code> — проверить готовую сборку</li>
+          </ul>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>Сделано с Vite</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
