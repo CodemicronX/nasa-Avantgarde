@@ -1,79 +1,10 @@
-// "Ask Pip": a tiny chat box. Answers come from an AI model through our own
+// "Ask Pip": a tiny chat box. Answers come from an AI model (Google Gemini, or OpenRouter) through our own
 // Supabase Edge Function (the API key never reaches the browser). The function grounds every answer in a knowledge
 // base generated from this site's data (scripts/build-pip-kb.mjs) and returns link chips that open cards/sections.
 // If the AI is unavailable, Pip answers from a small built-in fact list instead.
 import { scrollToEl } from './motion.js';
 const ENDPOINT = 'https://uweztfmeuyvfkdnltxcr.supabase.co/functions/v1/pip-chat';
-const MAX = 400;
-const MAX_HISTORY = 6;
-const PUBLIC_ANON_JWT = typeof __PIP_PUBLIC_ANON_JWT__ === 'string' ? __PIP_PUBLIC_ANON_JWT__ : '';
-const TURNSTILE_SITE_KEY = import.meta.env?.VITE_PIP_TURNSTILE_SITE_KEY?.trim();
-
-let turnstileLoading;
-function loadTurnstile() {
-  if (window.turnstile) return Promise.resolve(window.turnstile);
-  turnstileLoading ??= new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-    script.async = true;
-    const fail = () => {
-      clearTimeout(timeout);
-      script.remove();
-      reject(new Error('Turnstile unavailable'));
-    };
-    const timeout = setTimeout(fail, 8000);
-    script.onerror = fail;
-    script.onload = () => {
-      clearTimeout(timeout);
-      if (window.turnstile) resolve(window.turnstile);
-      else fail();
-    };
-    document.head.appendChild(script);
-  }).catch((error) => {
-    turnstileLoading = undefined;
-    throw error;
-  });
-  return turnstileLoading;
-}
-
-async function solveChallenge(container, signal) {
-  let api, widget, timeout, onAbort;
-  try {
-    return await new Promise((resolve, reject) => {
-      const fail = () => {
-        reject(new Error('Turnstile verification failed'));
-        return true;
-      };
-      onAbort = () => reject(signal.reason);
-      signal.addEventListener('abort', onAbort, { once: true });
-      timeout = setTimeout(fail, 90000);
-      loadTurnstile().then((turnstile) => {
-        signal.throwIfAborted();
-        api = turnstile;
-        container.hidden = false;
-        widget = api.render(container, {
-          sitekey: TURNSTILE_SITE_KEY,
-          action: 'pip_chat',
-          appearance: 'interaction-only',
-          size: 'compact',
-          retry: 'never',
-          'response-field': false,
-          callback: resolve,
-          'error-callback': fail,
-          'expired-callback': fail,
-          'timeout-callback': fail,
-          'unsupported-callback': fail,
-        });
-        if (!widget) fail();
-      }).catch(reject);
-    });
-  } finally {
-    clearTimeout(timeout);
-    signal.removeEventListener('abort', onAbort);
-    if (widget) api.remove(widget);
-    container.hidden = true;
-  }
-}
+const MAX = 300;
 
 const KB = [
   { k: ['apollo 11', 'аполлон 11', 'аполлона 11', 'аполлоне 11', 'armstrong', 'армстронг', 'tranquil', 'спокойств', 'flag', 'флаг'], en: 'Apollo 11 landed in the Sea of Tranquility on 20 July 1969. The flag was blown over by the engine blast at lift-off, but the descent stage and a laser mirror are still there.', ru: 'Аполлон-11 сел в Море Спокойствия 20 июля 1969 года. Флаг сдуло струёй двигателя при взлёте, но посадочная ступень и лазерный отражатель до сих пор там.' },
@@ -131,10 +62,7 @@ export function initPipChat({ onOpenChange } = {}) {
   document.body.appendChild(box);
   const log = box.querySelector('.pipchat-log'), form = box.querySelector('form'), input = box.querySelector('input'), send = form.querySelector('button'), chips = box.querySelector('.pipchat-chips');
   const history = [];
-  let busy = false, greeted = false, challenge;
-  const verification = document.createElement('div');
-  verification.hidden = true;
-  if (TURNSTILE_SITE_KEY) form.before(verification);
+  let busy = false, greeted = false;
 
   const add = (role, text, cls = '') => { const p = document.createElement('p'); p.className = `pm pm-${role} ${cls}`; p.textContent = text; log.appendChild(p); log.scrollTop = log.scrollHeight; return p; };
   const addLinks = (links) => {
@@ -159,45 +87,23 @@ export function initPipChat({ onOpenChange } = {}) {
     busy = true; send.disabled = true; chips.hidden = true;
     add('user', q); input.value = '';
     const wait = add('pip', '…', 'typing');
-    let answer = '', fallback = false, rateLimited = false, links = null;
-    let timeout;
+    let answer = '', fallback = false, links = null;
     try {
-      const body = { q, history: history.slice(), ctx: context() };
-      if (TURNSTILE_SITE_KEY) {
-        challenge = new AbortController();
-        wait.textContent = isRu(q) ? 'Проверяю запрос…' : 'Verifying your request…';
-        body.turnstileToken = await solveChallenge(verification, challenge.signal);
-        challenge = undefined;
-        wait.textContent = '…';
-      }
-      const ctl = new AbortController();
-      timeout = setTimeout(() => ctl.abort(), 28000);
-      const headers = { 'content-type': 'application/json' };
-      if (PUBLIC_ANON_JWT) headers.authorization = `Bearer ${PUBLIC_ANON_JWT}`;
-      const r = await fetch(ENDPOINT, { method: 'POST', headers, body: JSON.stringify(body), signal: ctl.signal });
+      const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 28000);
+      const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q, history: history.slice(-6), ctx: context() }), signal: ctl.signal });
+      clearTimeout(to);
       const d = await r.json().catch(() => ({}));
-      if (r.ok && typeof d?.answer === 'string' && d.answer.trim()) {
-        answer = d.answer;
-        links = d.links;
-      } else if (r.status === 429 || d?.error === 'rate_limited') {
-        rateLimited = true;
-        answer = isRu(q) ? 'Достигнут лимит вопросов. Попробуйте позже.' : 'You’ve reached the question limit. Please try again later.';
-      } else fallback = true;
+      if (r.ok && d.answer) { answer = d.answer; links = d.links; }
+      else if (r.status === 429 || d.error === 'rate_limited') answer = isRu(q) ? 'Уф, слишком много вопросов подряд! Дайте моим антеннам минутку остыть.' : 'Whoa, lots of questions! Give my antennas a minute to cool down.';
+      else fallback = true;
     } catch { fallback = true; }
-    finally {
-      clearTimeout(timeout);
-      challenge = undefined;
-    }
     if (fallback) answer = offline(q);
     wait.classList.remove('typing'); wait.textContent = answer;
     if (fallback) wait.classList.add('offline');
     addLinks(links);
-    if (!rateLimited) {
-      history.push({ role: 'user', text: q }, { role: 'model', text: answer.slice(0, MAX) });
-      if (history.length > MAX_HISTORY) history.splice(0, history.length - MAX_HISTORY);
-    }
+    history.push({ role: 'user', text: q }, { role: 'model', text: answer });
     busy = false; send.disabled = false; log.scrollTop = log.scrollHeight;
-    if (!box.hidden) input.focus({ preventScroll: true });
+    input.focus({ preventScroll: true });
   }
   form.addEventListener('submit', (e) => { e.preventDefault(); ask(input.value); });
 
@@ -214,10 +120,7 @@ export function initPipChat({ onOpenChange } = {}) {
       opener = document.activeElement;
       if (!greeted) { greeted = true; add('pip', document.documentElement.lang?.startsWith('ru') ? 'Привет! Я Пип. Спросите меня про машины, оставленные на Луне и Марсе.' : 'Hi! I’m Pip. Ask me about the machines people left on the Moon and Mars. You can write in any language!'); }
       fit(); setTimeout(() => input.focus({ preventScroll: true }), 50);
-    } else {
-      challenge?.abort();
-      opener?.focus?.({ preventScroll: true });
-    }
+    } else opener?.focus?.({ preventScroll: true });
     onOpenChange?.(open);
   }
   box.querySelector('.pipchat-x').addEventListener('click', () => setOpen(false));
