@@ -148,17 +148,21 @@ The core experience runs as a static website. **No Supabase project or API key i
 
 The implementation lives in [`supabase/functions/pip-chat/index.ts`](https://github.com/CodemicronX/nasa-Avantgarde/blob/main/supabase/functions/pip-chat/index.ts).
 
-1. Deploy the `pip-chat` Edge Function to your own Supabase project.
-2. Store `PIP_OPENROUTER_KEY` and/or `PIP_GEMINI_KEY` as **server-side secrets**.
-3. Update `ENDPOINT` in `src/pip-chat.js` to point to your function.
-4. Update `ALLOWED_ORIGINS` in the function for your deployment. For local development, include the exact local origin, such as `http://localhost:5173`.
-5. Configure function access to match the current anonymous browser request, which sends JSON without an authorization header.
+1. Link the Supabase CLI to the intended project with `supabase link --project-ref <project-ref>`. Apply the migration with `supabase db push`. Supabase supplies `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` for the hosted function when legacy keys are available.
+2. Add `OPENROUTER_API_KEY` and a long random `PIP_IP_SALT` in **Edge Functions → Secrets**. Set `PIP_GEMINI_KEY` if you also want Gemini as a fallback. Keep provider keys, the salt, the Turnstile secret, and the service-role key on Supabase.
+3. Configure one of these access modes and rebuild the Pages client. The public settings below go in GitHub Actions repository variables, or in the shell environment for a local build.
 
-The frontend currently caps questions at **300 characters**; the function caps them at **400** and accepts a short conversation history. The backend includes origin checks, timeouts, provider fallbacks, and in-memory request limits. These limits apply within a function instance rather than a shared persistent rate-limit store.
+   - **Legacy JWT.** Set `PIP_SUPABASE_ANON_JWT` to the project's public legacy `anon` JWT. Leave gateway JWT verification enabled and run `supabase functions deploy pip-chat`. The build rejects a service-role JWT. The public anon token identifies the app and can be reused by a direct client.
+   - **Turnstile.** Register `codemicronx.github.io` as an allowed widget hostname. Set the public `VITE_PIP_TURNSTILE_SITE_KEY` in GitHub and `PIP_TURNSTILE_SECRET_KEY` in Supabase. Deploy with `supabase functions deploy pip-chat --no-verify-jwt` if the browser uses Turnstile alone. The function requires successful server-side validation for `codemicronx.github.io` and action `pip_chat` whenever this secret is set.
 
-The provider model list is maintained in the function. Availability can change. When the AI request fails, the frontend uses its built-in fact list.
+4. For a different project, update `ENDPOINT` in `src/pip-chat.js` and `ALLOWED_ORIGIN` in `supabase/functions/pip-chat/request.ts`. The production allowlist contains `https://codemicronx.github.io`. CORS limits browser access at the origin level, so it covers every path on that hostname.
+5. Confirm an allowed browser request returns an answer and links, another origin is rejected, and a limited request returns HTTP 429. Until both the browser and function are configured, the chat can use the built-in fact list.
 
-**Never put provider keys in frontend code or `VITE_*` variables.** The production endpoint currently allows the project's GitHub Pages origin, so a local fork should configure its own backend to use AI replies.
+The backend accepts 400-character questions and up to six 400-character conversation turns in a 12 KB JSON body. The browser can supply user and assistant turns. The system prompt stays on the server, and card context and links use the site's knowledge base.
+
+Postgres enforces 4 accepted questions per minute and 20 per day per identity, plus global caps of 10 per minute and 25 per day, in fixed UTC windows. Set `PIP_TRUST_CF_CONNECTING_IP=true` **only after verifying** your ingress overwrites `CF-Connecting-IP`. This mode stores an HMAC of the validated address. With the default configuration or a missing address, requests share one identity bucket. The limits cap this app's requests and OpenRouter can still apply its own account or provider quotas.
+
+Pip selects between Nemotron 3 Ultra and Gemma 4 31B using measured latency and failures. Both OpenRouter IDs use the `:free` variant. A slow or failed primary launches the second model, and the first usable response wins. Up to two OpenRouter attempts can count toward the provider quota per question, including a canceled attempt. When an active free Qwen route is available, set `PIP_OPENROUTER_QWEN_MODEL` to its exact `qwen/...:free` ID to use it in place of Gemma.
 
 </details>
 
