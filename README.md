@@ -10,15 +10,15 @@
 
 A browser-based journey through the machines we left behind — and the science they made possible.
 
-[![Explore the live site](https://img.shields.io/badge/EXPLORE-LIVE%20SITE-d89a3c?style=for-the-badge)](https://leffstroi.github.io/capX/)
+[![Explore the live site](https://img.shields.io/badge/EXPLORE-LIVE%20SITE-d89a3c?style=for-the-badge)](https://codemicronx.github.io/nasa-Avantgarde/)
 [![NASA Space Apps](https://img.shields.io/badge/NASA%20SPACE%20APPS-2026-172a46?style=for-the-badge)](https://www.spaceappschallenge.org/2026/challenges/)
 [![Built with Three.js](https://img.shields.io/badge/3D-THREE.JS-30261f?style=for-the-badge&logo=threedotjs)](https://threejs.org/)
 
 **47 object stories · 3 playable campaigns · Moon & Mars maps · Interactive 3D · Pip, your robot guide**
 
-[Play the Simulator](https://leffstroi.github.io/capX/#game) · [Explore the Moon](https://leffstroi.github.io/capX/#moon) · [Browse the Museum](https://leffstroi.github.io/capX/#catalog) · [View Sources](https://leffstroi.github.io/capX/#sources)
+[Play the Simulator](https://codemicronx.github.io/nasa-Avantgarde/#game) · [Explore the Moon](https://codemicronx.github.io/nasa-Avantgarde/#moon) · [Browse the Museum](https://codemicronx.github.io/nasa-Avantgarde/#catalog) · [View Sources](https://codemicronx.github.io/nasa-Avantgarde/#sources)
 
-<img src="https://raw.githubusercontent.com/leffstroi/capX/main/public/img/insight-final-selfie.jpg" alt="NASA InSight lander's dust-covered solar panels on the surface of Mars" width="850" />
+<img src="https://raw.githubusercontent.com/CodemicronX/nasa-Avantgarde/main/public/img/insight-final-selfie.jpg" alt="NASA InSight lander's dust-covered solar panels on the surface of Mars" width="850" />
 
 <sub>InSight on Mars. Mission imagery: NASA/JPL-Caltech. A machine can fall silent while its discoveries keep speaking.</sub>
 
@@ -42,14 +42,14 @@ Our focus is school-age explorers, especially ages **11–15**, along with teach
 
 | Your destination | What you can do |
 | :--- | :--- |
-| [🌕 Moon Mission Control](https://leffstroi.github.io/capX/#moon) | Rotate the Moon, switch between surface and terrain views, select mission pins, and travel through time from 1966 onward. |
-| [🎮 Survival Simulator](https://leffstroi.github.io/capX/#game) | Make mission-control decisions for InSight, Spirit, or Surveyor 3 and compare your choices with real history. |
-| [📖 Scroll Story](https://leffstroi.github.io/capX/#story) | Follow ten Moon and Mars chapters alongside a changing globe and landing-site markers. |
-| [🏛️ Object Museum](https://leffstroi.github.io/capX/#catalog) | Explore 47 object cards with stories, facts, models, sources, and coordinates where available. Filter by status, place, and cause. |
-| [📍 Ghost-Site Atlas](https://leffstroi.github.io/capX/#atlas) | Locate retired, lost, and crashed hardware on planetary maps built with NASA imagery. |
-| [🛰️ 3D Lab](https://leffstroi.github.io/capX/#lab) | Rotate spacecraft models and inspect the hardware behind the missions. |
-| [🌍 Orbit Explorer](https://leffstroi.github.io/capX/#orbit) | Explore Earth-orbit context using CelesTrak orbital elements and SGP4 propagation. |
-| [🔎 Why & Prevention](https://leffstroi.github.io/capX/#why) | Learn why missions end and explore engineering lessons through sourced checklists. |
+| [🌕 Moon Mission Control](https://codemicronx.github.io/nasa-Avantgarde/#moon) | Rotate the Moon, switch between surface and terrain views, select mission pins, and travel through time from 1966 onward. |
+| [🎮 Survival Simulator](https://codemicronx.github.io/nasa-Avantgarde/#game) | Make mission-control decisions for InSight, Spirit, or Surveyor 3 and compare your choices with real history. |
+| [📖 Scroll Story](https://codemicronx.github.io/nasa-Avantgarde/#story) | Follow ten Moon and Mars chapters alongside a changing globe and landing-site markers. |
+| [🏛️ Object Museum](https://codemicronx.github.io/nasa-Avantgarde/#catalog) | Explore 47 object cards with stories, facts, models, sources, and coordinates where available. Filter by status, place, and cause. |
+| [📍 Ghost-Site Atlas](https://codemicronx.github.io/nasa-Avantgarde/#atlas) | Locate retired, lost, and crashed hardware on planetary maps built with NASA imagery. |
+| [🛰️ 3D Lab](https://codemicronx.github.io/nasa-Avantgarde/#lab) | Rotate spacecraft models and inspect the hardware behind the missions. |
+| [🌍 Orbit Explorer](https://codemicronx.github.io/nasa-Avantgarde/#orbit) | Explore Earth-orbit context using CelesTrak orbital elements and SGP4 propagation. |
+| [🔎 Why & Prevention](https://codemicronx.github.io/nasa-Avantgarde/#why) | Learn why missions end and explore engineering lessons through sourced checklists. |
 
 **Meet Pip.** The floating robot follows the journey, reacts to sections and lunar missions, and opens a short question-and-answer chat. If the AI service is unavailable, Pip falls back to a small built-in English/Russian fact list.
 
@@ -99,7 +99,7 @@ The **Moon and Mars are the core story**. Earth orbit and selected deep-space ob
 
 ## Data, sources & scientific care
 
-The project's references are accessible in the [Sources section](https://leffstroi.github.io/capX/#sources), the object catalog, and campaign records.
+The project's references are accessible in the [Sources section](https://codemicronx.github.io/nasa-Avantgarde/#sources), the object catalog, and campaign records.
 
 | Resource | Role in the project |
 | :--- | :--- |
@@ -126,19 +126,19 @@ The project's references are accessible in the [Sources section](https://leffstr
 Use **Node.js 22.12+ within the Node 22 release line** and npm. The repository's deployment workflow uses Node 22.
 
 ```bash
-git clone https://github.com/leffstroi/capX.git
-cd capX
+git clone https://github.com/CodemicronX/nasa-Avantgarde.git
+cd nasa-Avantgarde
 npm ci
 npm run dev
 ```
 
-Open **http://localhost:5173/capX/**, or the address printed by Vite if that port is already in use.
+Open **http://localhost:5173/nasa-Avantgarde/**, or the address printed by Vite if that port is already in use.
 
 | Command | Purpose |
 | :--- | :--- |
 | `npm run dev` | Start the Vite development server. |
 | `npm run build` | Generate the static production site in `dist/`. |
-| `npm run preview` | Preview the production build at `http://localhost:4173/capX/`. |
+| `npm run preview` | Preview the production build at `http://localhost:4173/nasa-Avantgarde/`. |
 | `python3 scripts/fetch_assets.py` | Optionally refresh the assets and orbital snapshot handled by the script. Requires network access. |
 
 The core experience runs as a static website. **No Supabase project or API key is required to explore the frontend locally.** Remote map tiles and other external services still require a connection; AI-backed Pip replies require a separately configured endpoint.
@@ -146,7 +146,7 @@ The core experience runs as a static website. **No Supabase project or API key i
 <details>
 <summary><strong>Configure Pip's optional AI backend</strong></summary>
 
-The implementation lives in [`supabase/functions/pip-chat/index.ts`](https://github.com/leffstroi/capX/blob/main/supabase/functions/pip-chat/index.ts).
+The implementation lives in [`supabase/functions/pip-chat/index.ts`](https://github.com/CodemicronX/nasa-Avantgarde/blob/main/supabase/functions/pip-chat/index.ts).
 
 1. Deploy the `pip-chat` Edge Function to your own Supabase project.
 2. Store `PIP_OPENROUTER_KEY` and/or `PIP_GEMINI_KEY` as **server-side secrets**.
@@ -203,7 +203,7 @@ The included workflow builds and deploys on pushes to `main`, with a manual trig
 
 For a fork, enable **GitHub Actions** as the Pages deployment source and adjust the base path to match your repository name.
 
-`vite.config.js` defaults to `/capX/`. Override `BASE_PATH` at build time for another host. For example, on a POSIX shell:
+`vite.config.js` defaults to `/nasa-Avantgarde/`. Override `BASE_PATH` at build time for another host. For example, on a POSIX shell:
 
 ```bash
 # Deploy at the root of a domain
@@ -252,7 +252,7 @@ Events use fields such as `sol`, `date`, `title`, `telemetry`, `text`, and `choi
 
 Useful contributions include sourced corrections, clearer explanations for young readers, new mission stories, accessibility improvements, and performance fixes.
 
-Open an [issue](https://github.com/leffstroi/capX/issues) describing the problem or submit a pull request with the change and its sources. For content corrections, include the relevant mission and a reliable reference. Run `npm run build` and check the affected experience before submitting code changes.
+Open an [issue](https://github.com/CodemicronX/nasa-Avantgarde/issues) describing the problem or submit a pull request with the change and its sources. For content corrections, include the relevant mission and a reliable reference. Run `npm run build` and check the affected experience before submitting code changes.
 
 ## AI disclosure, credits & license
 
@@ -274,8 +274,8 @@ This is an independent participant project. It is **not affiliated with or endor
 
 **The signal ended. The story didn't.**
 
-[Explore the project →](https://leffstroi.github.io/capX/)
+[Explore the project →](https://codemicronx.github.io/nasa-Avantgarde/)
 
-<sub>Made by Team Avantgarde · Repository: capX</sub>
+<sub>Made by Team Avantgarde · Repository: nasa-Avantgarde</sub>
 
 </div>
