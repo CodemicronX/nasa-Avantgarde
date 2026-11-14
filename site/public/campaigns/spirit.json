@@ -1,0 +1,408 @@
+{
+ "id": "spirit",
+ "title": "Spirit: Trapped in the Sands of Troy",
+ "subtitle": "A rover with a broken wheel, a hidden discovery, and a winter it must face standing still.",
+ "craft": "NASA Mars Exploration Rover Spirit (MER-A)",
+ "body": "mars",
+ "unit": "sol",
+ "year": "2004–2010",
+ "difficulty": "Campaign 2",
+ "model": {
+  "src": "models/opportunity.glb",
+  "credit": "3D model: NASA 3D Resources — MER-B Opportunity, Spirit’s identical twin (public domain)",
+  "scale": 1,
+  "rover": true
+ },
+ "cover": {
+  "src": "img/spirit-troy.jpg",
+  "credit": "Spirit’s view from “Troy”, sol 1891 (PIA12142) — NASA/JPL-Caltech"
+ },
+ "start": {
+  "sol": 0,
+  "gauges": {
+   "battery": 100,
+   "temp": -15,
+   "dust": 2,
+   "integrity": 100
+  },
+  "env": {
+   "light": 1,
+   "tilt": 0,
+   "frost": 0
+  }
+ },
+ "plan": {
+  "label": "Prime mission",
+  "value": 90
+ },
+ "record": {
+  "label": "Real Spirit (last contact 22 Mar 2010)",
+  "value": 2208
+ },
+ "intro": [
+  "MISSION CONTROL // MARS EXPLORATION ROVERS (simulated)",
+  "4 JAN 2004. Spirit bounces to a stop on airbags inside Gusev Crater.",
+  "The plan: 90 sols of driving and geology.",
+  "Six wheels, solar panels, a robotic arm — and no way to call a tow truck.",
+  "Keep it rolling. And when it can no longer roll, keep it alive."
+ ],
+ "events": [
+  {
+   "id": "wheel",
+   "sol": 780,
+   "date": "2006",
+   "title": "The right-front wheel stops",
+   "telemetry": [
+    "RF WHEEL MOTOR: NO ROTATION",
+    "DRIVE CURRENT: HIGH",
+    "5 OF 6 WHEELS OK"
+   ],
+   "text": "Spirit is far beyond its 90-sol plan, but its right-front wheel has stopped turning. The rover still has five powered wheels.",
+   "drift": {
+    "dust": 20,
+    "battery": -10
+   },
+   "choices": [
+    {
+     "id": "drag",
+     "label": "Drive mostly backwards, dragging the dead wheel behind",
+     "real": true,
+     "effects": {
+      "battery": -4,
+      "integrity": -5
+     },
+     "env": {
+      "tilt": 3
+     },
+     "outcome": "Spirit learns to drive in reverse, the frozen wheel ploughing a deep trench in the soil behind it. Slower — but still exploring.",
+     "source": {
+      "label": "The Planetary Society — MER update: Spirit drives backwards dragging the wheel",
+      "url": "https://www.planetary.org/articles/05-31-mer-update-1"
+     }
+    },
+    {
+     "id": "force",
+     "label": "Keep forcing current into the stuck motor until it frees itself",
+     "real": false,
+     "effects": {
+      "battery": -15,
+      "integrity": -25
+     },
+     "outcome": "The motor heats, nothing turns, and other systems pay for the wasted energy.",
+     "fact": {
+      "title": "Why not to force it",
+      "text": "Spirit’s right-front wheel never turned again after 2006. The team adapted by driving with five wheels and dragging the immobile one.",
+      "source": {
+       "label": "NASA JPL — Soft Ground Puts Spirit in Danger",
+       "url": "https://www.jpl.nasa.gov/news/soft-ground-puts-spirit-in-danger-despite-gain-in-daily-energy/"
+      }
+     }
+    }
+   ],
+   "discuss": "Spirit drove backwards for years with a stuck wheel. How can a broken part lead to a discovery?"
+  },
+  {
+   "id": "silica",
+   "sol": 1149,
+   "date": "Spring 2007",
+   "title": "A bright streak in the wheel track",
+   "telemetry": [
+    "NAVCAM: BRIGHT SOIL IN TRACK",
+    "MINI-TES: UNUSUAL SPECTRUM"
+   ],
+   "text": "The dragging wheel has churned up a patch of bright soil, nicknamed “Gertrude Weise”. The thermal spectrometer sees something odd. Investigating costs time and energy.",
+   "drift": {
+    "dust": 10,
+    "battery": -6
+   },
+   "choices": [
+    {
+     "id": "analyze",
+     "label": "Stop, drive back and touch it with the arm’s X-ray spectrometer",
+     "real": true,
+     "effects": {
+      "battery": -6
+     },
+     "outcome": "About 90 percent pure silica! You could hear people gasp on the teleconference. Concentrating silica like this requires water — strong evidence for a wetter ancient Mars. And it was found only because the wheel was broken.",
+     "science": 3,
+     "source": {
+      "label": "NASA JPL — Mars Rover Spirit Unearths Surprise Evidence of Wetter Past",
+      "url": "https://www.jpl.nasa.gov/news/mars-rover-spirit-unearths-surprise-evidence-of-wetter-past/"
+     }
+    },
+    {
+     "id": "drive",
+     "label": "Ignore it — save the energy for driving",
+     "real": false,
+     "effects": {
+      "battery": 2
+     },
+     "outcome": "Spirit drives on. The bright streak fades behind it.",
+     "science": -3,
+     "fact": {
+      "title": "The discovery you drove past",
+      "text": "The patch was about 90% silica, some of the best evidence Spirit found for water at Gusev. “We wouldn’t have found this if the bad wheel hadn’t been bad,” a team member said.",
+      "source": {
+       "label": "NASA JPL — Spirit Unearths Surprise Evidence of Wetter Past",
+       "url": "https://www.jpl.nasa.gov/news/mars-rover-spirit-unearths-surprise-evidence-of-wetter-past/"
+      }
+     }
+    }
+   ],
+   "discuss": "Why is silica-rich soil exciting for scientists who study water and life?"
+  },
+  {
+   "id": "troy",
+   "sol": 1892,
+   "date": "1 May 2009",
+   "title": "Wheels sink at Troy",
+   "telemetry": [
+    "!! WHEEL SLIP ~100%",
+    "WHEELS SUNK ABOUT HALFWAY",
+    "BELLY PAN CLEARANCE: UNKNOWN"
+   ],
+   "text": "Driving around the plateau “Home Plate”, Spirit’s wheels broke through a crust into soft, layered soil at a place named Troy. Five wheels spin; the rover barely moves.",
+   "drift": {
+    "dust": 12,
+    "battery": -8
+   },
+   "env": {
+    "tilt": 8
+   },
+   "choices": [
+    {
+     "id": "simulate",
+     "label": "Stop driving. Study the soil and rehearse escapes with a test rover on Earth",
+     "real": true,
+     "effects": {
+      "battery": 4
+     },
+     "outcome": "Driving is suspended. At JPL engineers build a sandbox with similar soil and test escape manoeuvres with an engineering rover. Meanwhile Spirit studies the soil it is stuck in — layers that hint at water seeping down in the past.",
+     "science": 1,
+     "source": {
+      "label": "NASA JPL — Soft Ground Puts Spirit in Danger Despite Gain in Daily Energy",
+      "url": "https://www.jpl.nasa.gov/news/soft-ground-puts-spirit-in-danger-despite-gain-in-daily-energy/"
+     }
+    },
+    {
+     "id": "floor",
+     "label": "Full power, all wheels, drive out now",
+     "real": false,
+     "effects": {
+      "battery": -20,
+      "integrity": -25
+     },
+     "env": {
+      "tilt": 14
+     },
+     "outcome": "The wheels dig themselves deeper. The chassis settles lower toward the rocks below.",
+     "fact": {
+      "title": "Why the team waited",
+      "text": "In May 2009 the team suspended driving because the digging-in raised concerns that the rover’s belly pan could touch rocks underneath, which would make escape even harder.",
+      "source": {
+       "label": "NASA JPL — Soft Ground Puts Spirit in Danger",
+       "url": "https://www.jpl.nasa.gov/news/soft-ground-puts-spirit-in-danger-despite-gain-in-daily-energy/"
+      }
+     }
+    }
+   ],
+   "discuss": "Why did engineers test escape moves with a twin rover on Earth before trying them on Mars?"
+  },
+  {
+   "id": "winter",
+   "sol": 2155,
+   "date": "26 Jan 2010",
+   "title": "Winter is coming to Gusev",
+   "telemetry": [
+    "SECOND WHEEL FAILED (NOV 2009)",
+    "SOLAR ENERGY DECLINING",
+    "TILT: SLIGHTLY SOUTH"
+   ],
+   "text": "Months of escape attempts have failed, and a second wheel stopped working in November. Winter begins in May. The winter Sun stays low in the northern sky, but Spirit tilts slightly south.",
+   "drift": {
+    "dust": 6,
+    "battery": -20
+   },
+   "env": {
+    "light": 0.6,
+    "tilt": 10
+   },
+   "choices": [
+    {
+     "id": "tilt",
+     "label": "Become a stationary platform; use the last drives to tilt the panels north",
+     "real": true,
+     "effects": {
+      "battery": 6
+     },
+     "env": {
+      "tilt": 5
+     },
+     "outcome": "NASA designates Spirit a stationary research platform. The remaining drives are spent improving its tilt — even a few degrees could keep communication going through winter. It begins stationary science, like tracking Mars’ wobble by radio.",
+     "science": 1,
+     "source": {
+      "label": "NASA (via PR Newswire) — Now a Stationary Research Platform, Spirit Starts a New Chapter",
+      "url": "https://www.prnewswire.com/news-releases/now-a-stationary-research-platform-nasas-mars-rover-spirit-starts-a-new-chapter-in-red-planet-scientific-studies-82698787.html"
+     }
+    },
+    {
+     "id": "escape",
+     "label": "Spend every remaining watt on more escape attempts",
+     "real": false,
+     "effects": {
+      "battery": -60
+     },
+     "env": {
+      "tilt": 12,
+      "light": 0.3
+     },
+     "fail": "frozen",
+     "fact": {
+      "title": "Why tilt mattered more than escape",
+      "text": "NASA expected solar energy to become insufficient for driving by mid-February 2010. At its tilt, Spirit probably would not have had enough power to keep communicating through the winter, so the last drives were used to improve the angle toward the Sun.",
+      "source": {
+       "label": "NASA — Spirit becomes a stationary research platform",
+       "url": "https://www.prnewswire.com/news-releases/now-a-stationary-research-platform-nasas-mars-rover-spirit-starts-a-new-chapter-in-red-planet-scientific-studies-82698787.html"
+      }
+     }
+    }
+   ],
+   "discuss": "Spirit needed to tilt its panels toward the Sun. How does the angle of a panel change the energy it collects?"
+  },
+  {
+   "id": "silence",
+   "sol": 2208,
+   "date": "22 Mar 2010",
+   "final": true,
+   "title": "Hibernation",
+   "telemetry": [
+    "ENERGY BELOW COMMS THRESHOLD",
+    "INTERNAL TEMP FALLING",
+    "LOW-POWER FAULT MODE LIKELY"
+   ],
+   "text": "On 22 March 2010 Spirit communicates for what will be the last time. On 30 March it misses a planned session — as power forecasts predicted, it has likely gone into hibernation.",
+   "drift": {
+    "battery": -40
+   },
+   "env": {
+    "light": 0.25,
+    "frost": 0.6
+   },
+   "choices": [
+    {
+     "id": "wait",
+     "label": "Keep listening through the winter and into spring",
+     "real": true,
+     "effects": {
+      "battery": -100
+     },
+     "fail": "real_end",
+     "outcome": "The team listens for more than a year. On 25 May 2011 NASA ends its efforts: Spirit most likely got too cold without enough energy for its survival heaters.",
+     "source": {
+      "label": "NASA Science — Spirit mission page",
+      "url": "https://science.nasa.gov/mission/mer-spirit/"
+     }
+    }
+   ],
+   "discuss": "When should a team stop listening for a silent spacecraft?"
+  }
+ ],
+ "endings": {
+  "frozen": {
+   "title": "Frozen in place",
+   "sol": 2160,
+   "text": "With the batteries drained by escape attempts and the panels still tilted away from the winter Sun, Spirit had nothing left for its heaters."
+  },
+  "real_end": {
+   "title": "Mission complete",
+   "sol": 2208,
+   "text": "You matched the real decisions. Spirit worked for 2,208 sols — more than 24 times its 90-sol plan — and turned a broken wheel into one of its biggest discoveries."
+  },
+  "battery": {
+   "title": "Batteries exhausted",
+   "text": "The batteries dropped to zero; without heaters the electronics froze."
+  },
+  "integrity": {
+   "title": "Rover crippled",
+   "text": "Risky manoeuvres broke too many parts. Spirit could no longer move or work."
+  }
+ },
+ "legacy": {
+  "timeline": [
+   [
+    "4 Jan 2004",
+    "Landed in Gusev Crater."
+   ],
+   [
+    "2006",
+    "Right-front wheel stopped; Spirit drove backwards dragging it."
+   ],
+   [
+    "2007",
+    "Dragging wheel exposed ~90% silica soil — evidence of past water."
+   ],
+   [
+    "Apr–May 2009",
+    "Wheels broke through a crust at “Troy” and dug into soft sand."
+   ],
+   [
+    "26 Jan 2010",
+    "Designated a stationary research platform."
+   ],
+   [
+    "22 Mar 2010",
+    "Last communication (sol 2208)."
+   ],
+   [
+    "25 May 2011",
+    "NASA ended recovery efforts."
+   ]
+  ],
+  "where": {
+   "coords": [
+    -14.5692,
+    175.4729
+   ],
+   "label": "Spirit landing site, Gusev Crater (Troy is on the west side of Home Plate, a few km away)",
+   "coordSource": {
+    "label": "The Planetary Society — Mars landing sites map (Arvidson et al. 2004)",
+    "url": "https://planetary.s3.amazonaws.com/assets/images/charts-diagrams/2020/20200603_map-mars-landing-sites-2020-detailed_ver1-3.pdf"
+   },
+   "state": "Still sitting at Troy, embedded in the sand where it last worked, silent since March 2010.",
+   "image": {
+    "src": "img/spirit-troy.jpg",
+    "credit": "Spirit’s view from “Troy”, sol 1891 (PIA12142) — NASA/JPL-Caltech",
+    "caption": "The last place Spirit ever saw: a navigation-camera panorama taken at Troy as its wheels were sinking.",
+    "url": "https://science.nasa.gov/photojournal/spirits-view-from-troy/"
+   }
+  },
+  "inside": [
+   {
+    "title": "The trench it dug",
+    "text": "The dead wheel’s furrow is how Spirit found silica — a reminder that failures can produce discoveries.",
+    "source": {
+     "label": "NASA JPL — Spirit Unearths Surprise Evidence",
+     "url": "https://www.jpl.nasa.gov/news/mars-rover-spirit-unearths-surprise-evidence-of-wetter-past/"
+    }
+   },
+   {
+    "title": "Layered soil of Troy",
+    "text": "The soil Spirit got stuck in contains layers suggesting water, perhaps from melting frost or snow, once seeped into the ground.",
+    "source": {
+     "label": "NASA JPL — Trapped Mars Rover Finds Evidence of Subsurface Water",
+     "url": "https://www.jpl.nasa.gov/news/nasa-trapped-mars-rover-finds-evidence-of-subsurface-water/"
+    }
+   }
+  ],
+  "sources": [
+   {
+    "label": "NASA Science — Spirit mission page",
+    "url": "https://science.nasa.gov/mission/mer-spirit/"
+   },
+   {
+    "label": "NASA JPL — Mars Rover Yielding New Clues While Lodged in Martian Soil",
+    "url": "https://www.jpl.nasa.gov/news/mars-rover-yielding-new-clues-while-lodged-in-martian-soil/"
+   }
+  ]
+ }
+}
