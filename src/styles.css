@@ -478,46 +478,43 @@ kbd { font: 600 .8em var(--mono); border: 1px solid currentColor; border-radius:
 }
 
 /* ---- Pip, the floating guide ---- */
-.pip { --pip-size: 96px; position: fixed; left: 0; top: 0; z-index: 60; width: var(--pip-size); height: var(--pip-size); pointer-events: none; will-change: transform; transition: opacity .5s; }
+.pip { position: fixed; left: 0; top: 0; z-index: 60; width: 96px; height: 96px; pointer-events: none; will-change: transform; transition: opacity .5s; }
 .pip.hidden { opacity: 0; visibility: hidden; }
-.pip.mobile { --pip-size: 56px; }
-.pip-btn { pointer-events: auto; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: 0 0; transform: scale(var(--s, 1)); border-radius: 50%; }
-.pip-btn svg { width: 100%; height: 100%; overflow: visible; pointer-events: none; filter: drop-shadow(0 8px 14px rgba(169, 165, 243, 0.5)); }
-.pip-bubble {
-  --bubble-width: min(250px, calc(100vw - 32px));
-  --avatar-center: calc(var(--pip-size) * var(--s, 1) / 2);
-  --bubble-left: clamp(12px - var(--pip-x), var(--avatar-center) - var(--bubble-width) / 2, 100vw - 20px - var(--pip-x) - var(--bubble-width));
-  position: absolute; bottom: calc(100% + 12px); left: var(--bubble-left); width: var(--bubble-width);
-  background: #0b0a52; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 16px;
-  padding: .7rem .9rem; font: 500 .92rem/1.4 var(--sans); box-shadow: 4px 4px 0 var(--ink);
-  opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s; pointer-events: none;
-}
-.pip-bubble::after { content: ""; position: absolute; top: 100%; left: clamp(12px, var(--avatar-center) - var(--bubble-left) - 10px, 100% - 32px); border: 10px solid transparent; border-top-color: var(--ink); }
+.pip.mobile { width: 56px; height: 56px; }
+.pip-btn { pointer-events: auto; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: 0 0; transform: scale(var(--s, 1)) rotate(var(--lean, 0deg)); border-radius: 50%; }
+.pip-btn svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 8px 14px rgba(169, 165, 243, 0.5)); }
+.pip-bubble { position: absolute; bottom: calc(100% + 12px); left: 0; width: max-content; max-width: min(300px, 78vw); background: #0b0a52; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 16px; padding: .7rem .9rem; font: 500 .92rem/1.4 var(--sans); box-shadow: 4px 4px 0 var(--ink); opacity: 0; transform: translateY(6px) scale(.96); transform-origin: bottom left; transition: opacity .3s, transform .3s; pointer-events: none; }
+.pip-bubble::after { content: ""; position: absolute; top: 100%; left: 28px; border: 10px solid transparent; border-top-color: var(--ink); }
 .pip-bubble.show { opacity: 1; transform: none; }
-.pip.mobile .pip-bubble { font-size: .86rem; }
+.pip[data-side='right'] .pip-bubble { left: auto; right: 0; transform-origin: bottom right; }
+.pip[data-side='right'] .pip-bubble::after { left: auto; right: 28px; }
+.pip[data-side='dock'] .pip-bubble { bottom: calc(100% * var(--s, 1) + 12px); left: 50%; margin-left: -110px; max-width: 220px; width: 220px; }
+.pip[data-side='dock'] .pip-bubble::after { left: 50%; margin-left: -10px; }
+.pip.mobile .pip-bubble { font-size: .86rem; max-width: min(270px, calc(100vw - 40px)); left: 14px; }
+.pip.mobile[data-side='right'] .pip-bubble { left: auto; right: 14px; }
+.pip-bubble { max-width: min(270px, 78vw); }
 /* poses */
-.pp-body { animation: ppFloat 3.8s ease-in-out infinite; }
-@keyframes ppFloat { 50% { transform: translateY(-4px); } }
+.pp-body { transform-origin: 80px 120px; animation: ppFloat 3.2s ease-in-out infinite; }
+@keyframes ppFloat { 50% { transform: translateY(-6px); } }
 .pp-light { animation: ppLight 1.6s infinite; } @keyframes ppLight { 50% { fill: #ff5a3c; } }
 .pp-eyes { animation: ppBlink 4.5s infinite; transform-origin: 80px 69px; } @keyframes ppBlink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
 .pp-eyes-closed, .pp-mouth-open, .pp-q, .pp-z { opacity: 0; }
 .pip.talking .pp-mouth { opacity: 0; }
 .pip.talking .pp-mouth-open { opacity: 1; animation: ppTalk .18s infinite alternate; transform-origin: 80px 85px; } @keyframes ppTalk { to { transform: scaleY(.3); } }
-.pp-arm-l, .pp-arm-r, .pp-head { transition: transform .4s ease-in-out; }
-.pp-arm-l { transform-origin: 42px 118px; }
-.pp-arm-r, .pp-wave { transform-origin: 118px 118px; }
-.pp-head { transform-origin: 80px 110px; }
-.pip[data-pose='wave'] .pp-arm-r { transform: rotate(-120deg); }
+.pp-arm-l, .pp-arm-r { transition: transform .4s; }
+.pp-arm-l { transform-origin: 42px 118px; } .pp-arm-r { transform-origin: 118px 118px; }
+.pip[data-pose='wave'] .pp-arm-r { animation: ppWave .5s ease-in-out 4 alternate; transform: rotate(-120deg); }
+@keyframes ppWave { from { transform: rotate(-100deg); } to { transform: rotate(-140deg); } }
 .pip[data-pose='point'] .pp-arm-r { transform: rotate(-80deg); }
+.pip[data-side='left'][data-pose='point'] .pp-arm-r, .pip[data-side='dock'][data-pose='point'] .pp-arm-r { transform: rotate(-80deg); }
 .pip[data-side='right'][data-pose='point'] .pp-arm-r { transform: none; } .pip[data-side='right'][data-pose='point'] .pp-arm-l { transform: rotate(80deg); }
-.pip[data-pose='think'] .pp-head { transform: rotate(-8deg); } .pip[data-pose='think'] .pp-q { opacity: 1; animation: ppFloat 1.6s infinite; }
+.pip[data-pose='think'] .pp-head { transform: rotate(-8deg); transform-origin: 80px 110px; } .pip[data-pose='think'] .pp-q { opacity: 1; animation: ppFloat 1.6s infinite; }
 .pip[data-pose='think'] .pp-arm-l { transform: rotate(110deg); }
 .pip[data-pose='cheer'] .pp-arm-l { transform: rotate(130deg); } .pip[data-pose='cheer'] .pp-arm-r { transform: rotate(-130deg); }
+.pip[data-pose='jump'] .pp-body { animation: ppJump .7s ease 2; } @keyframes ppJump { 40% { transform: translateY(-20px); } }
 .pip[data-pose='sleep'] .pp-eyes { opacity: 0; } .pip[data-pose='sleep'] .pp-eyes-closed { opacity: 1; } .pip[data-pose='sleep'] .pp-z { opacity: 1; animation: ppFloat 2s infinite; }
 .pip.talking[data-pose='sleep'] .pp-eyes { opacity: 1; } .pip.talking[data-pose='sleep'] .pp-eyes-closed { opacity: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .pip *, .pip *::before, .pip *::after { animation: none !important; transition: none !important; }
-}
+@media (prefers-reduced-motion: reduce) { .pip-bubble { transition: none; } }
 
 @media (min-width: 861px) { .hero-bg { left: 56%; } .hero .lead { max-width: 600px; } }
 @media (min-width: 861px) { .hero-sub { max-width: 560px; } }

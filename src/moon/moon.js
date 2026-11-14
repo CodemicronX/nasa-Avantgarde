@@ -7,11 +7,7 @@ import { MISSIONS, STATUS, statusAt, TODAY_YEAR } from './missions.js';
 
 const $ = (s) => document.querySelector(s);
 const MIN_YEAR = 1966;
-let pipT;
-function say(text, mood, section) {
-  clearTimeout(pipT);
-  document.dispatchEvent(new CustomEvent('pip:say', { detail: { text, mood, section } }));
-}
+const say = (text, mood) => document.dispatchEvent(new CustomEvent('pip:say', { detail: { text, mood, force: true } }));
 const state = { year: MIN_YEAR, selected: 'luna9', mode: 'surface', touring: false, lastClick: null };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -225,7 +221,7 @@ function selectMission(id, { fly = false, talk = false } = {}) {
   if (!talk) return;
   const st = statusAt(m, state.year);
   if (st.status === 'future') say(`Not yet! ${m.name} lands in ${m.year}. Slide the time machine forward!`, 'point');
-  else if (second) say(`Fun fact: ${m.fact}`, 'cheer');
+  else if (second) say(`Fun fact: ${m.fact}`, 'jump');
   else say(m.pip[st.status] || st.text, 'wave');
 }
 
@@ -242,6 +238,7 @@ $('#mc-terrain').addEventListener('click', () => setMode('terrain'));
 
 const range = $('#mc-year');
 range.max = String(TODAY_YEAR);
+let pipT = null;
 function setYear(y, { quiet = false } = {}) {
   const prev = state.year; state.year = y; range.value = y;
   range.style.setProperty('--p', ((y - MIN_YEAR) / (TODAY_YEAR - MIN_YEAR)) * 100 + '%');
@@ -251,15 +248,14 @@ function setYear(y, { quiet = false } = {}) {
   $('#mc-yearnote').textContent = events.length ? events.map((e) => `${e.m.name}: ${e.t.text}`).join('  •  ')
     : y >= TODAY_YEAR ? 'Today: the mirrors still work, several flags still stand, and new missions are on their way.' : 'A quiet year on the Moon. Everything stays where it was left.';
   renderAll();
-  if (prev === y && !quiet) return;
+  if (quiet || prev === y) return;
   clearTimeout(pipT);
-  if (quiet) return;
   pipT = setTimeout(() => {
     const ev = events.find((e) => e.t.from === e.m.year) || events[0];
     if (ev) {
       if (!state.touring) selectMission(ev.m.id, { fly: true });
-      say(`${y}! ` + (ev.m.pip[statusAt(ev.m, y).status] || ev.t.text), 'cheer', 'moon');
-    } else if (y >= TODAY_YEAR) say('Back to today! Four laser mirrors on this map still help scientists. Abandoned… but not forgotten!', 'wave', 'moon');
+      say(`${y}! ` + (ev.m.pip[statusAt(ev.m, y).status] || ev.t.text), 'jump');
+    } else if (y >= TODAY_YEAR) say('Back to today! Four laser mirrors on this map still help scientists. Abandoned… but not forgotten!', 'wave');
   }, 280);
 }
 range.addEventListener('input', () => { stopTour(); setYear(+range.value); });
@@ -271,10 +267,10 @@ function startTour() {
   let i = 0;
   const next = () => {
     if (!state.touring) return;
-    if (i >= steps.length) { setYear(TODAY_YEAR, { quiet: true }); say('That’s the tour! Everything you saw is still up there. Abandoned… but not forgotten.', 'wave', 'moon'); return stopTour(); }
+    if (i >= steps.length) { setYear(TODAY_YEAR, { quiet: true }); say('That’s the tour! Everything you saw is still up there. Abandoned… but not forgotten.', 'wave'); return stopTour(); }
     const m = steps[i++];
     setYear(m.year, { quiet: true }); selectMission(m.id, { fly: true });
-    say(`${m.year}: ${m.pip[statusAt(m, m.year).status] || m.firsts}`, 'cheer', 'moon');
+    say(`${m.year}: ${m.pip[statusAt(m, m.year).status] || m.firsts}`, 'jump');
     tourTimer = setTimeout(next, 6500);
   };
   next();

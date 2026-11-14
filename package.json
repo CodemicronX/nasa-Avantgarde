@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "vite",
-    "kb": "node scripts/build-pip-kb.mjs",
-    "build": "npm run kb && vite build",
-    "preview": "vite preview"
+    "dev": "vite site",
+    "kb": "node site/scripts/build-pip-kb.mjs",
+    "build": "node site/scripts/build-pip-kb.mjs && vite build site --emptyOutDir false --outDir ../",
+    "preview": "vite preview site"
   },
   "keywords": [],
   "author": "",
