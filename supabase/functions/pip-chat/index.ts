@@ -690,6 +690,50 @@ function parse(raw: string, ru: boolean, allowUrls: Set<string>) {
   return { text, links };
 }
 
+type IntentResult = {
+  answer: string;
+  links: string[];
+};
+
+function routeIntent(q: string): IntentResult | null {
+  const text = q.trim().toLowerCase().replace(/ё/g, "е");
+
+  if (/^(привет|здравствуй|здравствуйте|hello|hi|hey|салют)[!?.\s]*$/i.test(text)) {
+    return { answer: "Привет! Чем могу помочь?", links: [] };
+  }
+
+  const math = text.match(/^(-?\d+(?:[.,]\d+)?)\s*([+\-*/×÷])\s*(-?\d+(?:[.,]\d+)?)\s*[?=.!]*$/);
+  if (math) {
+    const a = Number(math[1].replace(",", "."));
+    const b = Number(math[3].replace(",", "."));
+    const op = math[2];
+
+    if ((op === "/" || op === "÷") && b === 0) {
+      return { answer: "На ноль делить нельзя.", links: [] };
+    }
+
+    const result = op === "+" ? a + b
+      : op === "-" ? a - b
+      : op === "*" || op === "×" ? a * b
+      : a / b;
+
+    if (Number.isFinite(result)) {
+      return { answer: String(Number(result.toPrecision(12))), links: [] };
+    }
+  }
+
+  const navigationRequest =
+    /(^|[\s,.:;!?])(?:открой(?:те)?|открыть|покажи(?:те)?|показать|перейди(?:те)?|перейти|open|show|go\s+to)(?=$|[\s,.:;!?])/i.test(text);
+  const moonRequest =
+    /moon\s+mission\s+control|лунн(?:ый|ого|ом|ую)\s+(?:центр|центра|центре|карту|карта)|(^|[\s,.:;!?])(?:moon|лун[ауеы])(?=$|[\s,.:;!?])/i.test(text);
+
+  if (navigationRequest && moonRequest) {
+    return { answer: "Открываю Moon Mission Control.", links: ["#moon"] };
+  }
+
+  return null;
+}
+
 declare const Deno: {
   env: {
     get(name: string): string | undefined;
@@ -741,6 +785,14 @@ Deno.serve(async (req: Request) => {
   const sys = SYSTEM + "\n\n" + knowledge;
   const all = [...turns, { role: "user" as const, text: q }];
   const done = (raw: string, via: string, extraUrls: string[] = []) => { extraUrls.forEach((u) => allowUrls.add(u)); const p = parse(raw, ru, allowUrls); return p.text ? json({ answer: p.text, links: p.links, via, ...(probe ? { ms: Date.now() - started, kb: docs.map((d) => d.id) } : {}) }, 200, h) : null; };
+  const intent = routeIntent(q);
+
+  if (intent) {
+    const raw = intent.links.length ? `${intent.answer}\nLINKS: ${intent.links.join(", ")}` : intent.answer;
+    const response = done(raw, "intent-router");
+    if (response) return response;
+  }
+
   let lastErr = "";
 
   if (orKey) {
