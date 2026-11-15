@@ -11,11 +11,7 @@
   "src": "models/insight.glb",
   "credit": "3D model: NASA 3D Resources (public domain)",
   "scale": 1,
-  "panelHint": [
-   "panel",
-   "array",
-   "solar"
-  ]
+  "panelHint": ["panel", "array", "solar"]
  },
  "cover": {
   "src": "img/insight-final-selfie.jpg",
@@ -23,26 +19,11 @@
  },
  "start": {
   "sol": 0,
-  "gauges": {
-   "battery": 100,
-   "temp": -20,
-   "dust": 2,
-   "integrity": 100
-  },
-  "env": {
-   "light": 1,
-   "tilt": 0,
-   "frost": 0
-  }
+  "gauges": { "battery": 100, "temp": -20, "dust": 2, "integrity": 100 },
+  "env": { "light": 1, "tilt": 0, "frost": 0 }
  },
- "plan": {
-  "label": "Prime mission (one Mars year)",
-  "value": 669
- },
- "record": {
-  "label": "Real InSight (last contact 15 Dec 2022)",
-  "value": 1440
- },
+ "plan": { "label": "Prime mission (one Mars year)", "value": 669 },
+ "record": { "label": "Real InSight (last contact 15 Dec 2022)", "value": 1440 },
  "intro": [
   "MISSION CONTROL // JET PROPULSION LABORATORY (simulated)",
   "26 NOV 2018 — 19:52:59 UTC. Touchdown confirmed in Elysium Planitia, Mars.",
@@ -56,44 +37,28 @@
    "sol": 0,
    "date": "26 Nov 2018",
    "title": "Power on the surface",
-   "telemetry": [
-    "EDL COMPLETE",
-    "BATTERY DRAINING ON INTERNAL POWER",
-    "SOLAR ARRAYS: STOWED"
-   ],
+   "telemetry": ["EDL COMPLETE", "BATTERY DRAINING ON INTERNAL POWER", "SOLAR ARRAYS: STOWED"],
    "text": "InSight has survived entry, descent and landing, but it is running on its battery. The two round solar arrays are still folded. The dust kicked up by landing is still settling.",
    "choices": [
     {
-     "id": "deploy",
-     "label": "Deploy both solar arrays now, on landing day",
-     "real": true,
-     "effects": {
-      "battery": 0,
-      "dust": 1
-     },
-     "outcome": "The arrays fan open within hours of landing and start recharging the batteries. At first they produce around 5,000 watt-hours per sol.",
-     "source": {
-      "label": "NASA JPL — InSight Is Catching Rays on Mars",
-      "url": "https://www.jpl.nasa.gov/news/insight-is-catching-rays-on-mars"
-     }
-    },
-    {
      "id": "wait",
-     "label": "Wait a few sols for landing dust to settle",
+     "label": "Wait until landing dust settles before opening the arrays",
      "real": false,
-     "effects": {
-      "battery": -45,
-      "integrity": -10
-     },
+     "effects": { "battery": -45, "integrity": -10 },
      "outcome": "The battery keeps draining while the arrays stay closed. You open them just in time, but the batteries took a deep discharge.",
      "fact": {
       "title": "Why you should not wait",
       "text": "A lander arrives with only the energy stored in its batteries. InSight deployed its arrays on landing day so it could recharge immediately; delaying would mean deep battery discharge and colder electronics.",
-      "source": {
-       "label": "NASA JPL — InSight Is Catching Rays on Mars",
-       "url": "https://www.jpl.nasa.gov/news/insight-is-catching-rays-on-mars"
-      }
+      "source": { "label": "NASA JPL — InSight Is Catching Rays on Mars", "url": "https://www.jpl.nasa.gov/news/insight-is-catching-rays-on-mars" }
      }
+    },
+    {
+     "id": "deploy",
+     "label": "Open the arrays as soon as the lander is stable",
+     "real": true,
+     "effects": { "battery": 0, "dust": 1 },
+     "outcome": "The arrays fan open within hours of landing and start recharging the batteries. At first they produce around 5,000 watt-hours per sol.",
+     "source": { "label": "NASA JPL — InSight Is Catching Rays on Mars", "url": "https://www.jpl.nasa.gov/news/insight-is-catching-rays-on-mars" }
     }
    ],
    "discuss": "Why does a solar-powered lander open its panels as soon as possible after landing? What would you check first?"
@@ -103,44 +68,30 @@
    "sol": 22,
    "date": "19 Dec 2018",
    "title": "Where should the seismometer live?",
-   "telemetry": [
-    "ROBOTIC ARM: READY",
-    "SEIS ON DECK",
-    "WIND: VARIABLE"
-   ],
+   "telemetry": ["ROBOTIC ARM: READY", "SEIS ON DECK", "WIND: VARIABLE"],
    "text": "SEIS is still sitting on the lander deck. The robotic arm can lift it and place it on the ground — something no spacecraft has done on another planet before.",
    "choices": [
     {
-     "id": "ground",
-     "label": "Lift SEIS with the arm and set it on the Martian ground",
-     "real": true,
-     "effects": {
-      "battery": -6
-     },
-     "outcome": "On 19 December 2018 InSight placed its seismometer on Mars — the first time a seismometer was robotically placed on another planet. A wind and thermal shield later covered it.",
-     "science": 1,
-     "source": {
-      "label": "NASA JPL — NASA’s InSight Places First Instrument on Mars",
-      "url": "https://www.jpl.nasa.gov/news/nasas-insight-places-first-instrument-on-mars/"
-     }
-    },
-    {
      "id": "deck",
-     "label": "Leave it on the deck — less risk for the arm",
+     "label": "Leave it on the deck to avoid risking the arm",
      "real": false,
-     "effects": {
-      "battery": 0
-     },
+     "effects": { "battery": 0 },
      "outcome": "The seismometer records mostly the lander itself: wind shaking the deck and panels. The data are noisy.",
      "science": -1,
      "fact": {
       "title": "Why not to measure from the deck",
       "text": "A seismometer must touch the ground to feel quakes travelling through the planet. InSight’s plan was to place SEIS directly on the surface with its arm and then cover it with a wind and thermal shield.",
-      "source": {
-       "label": "NASA JPL — NASA’s InSight Places First Instrument on Mars",
-       "url": "https://www.jpl.nasa.gov/news/nasas-insight-places-first-instrument-on-mars/"
-      }
+      "source": { "label": "NASA JPL — NASA’s InSight Places First Instrument on Mars", "url": "https://www.jpl.nasa.gov/news/nasas-insight-places-first-instrument-on-mars/" }
      }
+    },
+    {
+     "id": "ground",
+     "label": "Use the arm to place SEIS on the Martian surface",
+     "real": true,
+     "effects": { "battery": -6 },
+     "outcome": "On 19 December 2018 InSight placed its seismometer on Mars — the first time a seismometer was robotically placed on another planet. A wind and thermal shield later covered it.",
+     "science": 1,
+     "source": { "label": "NASA JPL — NASA’s InSight Places First Instrument on Mars", "url": "https://www.jpl.nasa.gov/news/nasas-insight-places-first-instrument-on-mars/" }
     }
    ],
    "discuss": "Why is a seismometer more useful on the ground than on the lander deck? Think about wind and vibration."
@@ -150,43 +101,28 @@
    "sol": 92,
    "date": "Feb 2019 – Jan 2021",
    "title": "The mole will not dig",
-   "telemetry": [
-    "HP3 'MOLE' HAMMERING",
-    "PENETRATION: STALLED",
-    "TILT INCREASING"
-   ],
+   "telemetry": ["HP3 'MOLE' HAMMERING", "PENETRATION: STALLED", "TILT INCREASING"],
    "text": "The heat probe, nicknamed the “mole”, is meant to hammer itself several metres down. Since 28 February 2019 it keeps bouncing in place. The soil clumps instead of flowing around the probe.",
    "choices": [
     {
-     "id": "pin",
-     "label": "Use the arm’s scoop to press on and pin the mole for friction",
-     "real": true,
-     "effects": {
-      "battery": -8
-     },
-     "outcome": "Pinning helps: the mole gets 2–3 cm below the surface. But after 500 more hammer strokes on 9 January 2021 with no progress, the team ends the effort. The arm learned skills it was never designed for — they will matter later.",
-     "source": {
-      "label": "NASA — NASA InSight’s ‘Mole’ Ends Its Journey on Mars",
-      "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasa-insights-mole-ends-its-journey-on-mars/"
-     }
-    },
-    {
      "id": "hammer",
-     "label": "Keep hammering at full power until it breaks through",
+     "label": "Keep hammering at full power to force it deeper",
      "real": false,
-     "effects": {
-      "battery": -12,
-      "integrity": -15
-     },
+     "effects": { "battery": -12, "integrity": -15 },
      "outcome": "Thousands of strokes later the mole is still bouncing in its pit. You burned energy and stressed the mechanism.",
      "fact": {
       "title": "Why hammering alone fails",
       "text": "The mole needed friction from the soil to balance the recoil of its hammer. Mars’ soil at the site clumped and gave too little friction, so the probe bounced in place. Extra hammering cannot create friction.",
-      "source": {
-       "label": "NASA — NASA InSight’s ‘Mole’ Ends Its Journey on Mars",
-       "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasa-insights-mole-ends-its-journey-on-mars/"
-      }
+      "source": { "label": "NASA — NASA InSight’s ‘Mole’ Ends Its Journey on Mars", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasa-insights-mole-ends-its-journey-on-mars/" }
      }
+    },
+    {
+     "id": "pin",
+     "label": "Use the arm’s scoop to press the mole and give it friction",
+     "real": true,
+     "effects": { "battery": -8 },
+     "outcome": "Pinning helps: the mole gets 2–3 cm below the surface. But after 500 more hammer strokes on 9 January 2021 with no progress, the team ends the effort. The arm learned skills it was never designed for — they will matter later.",
+     "source": { "label": "NASA — NASA InSight’s ‘Mole’ Ends Its Journey on Mars", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasa-insights-mole-ends-its-journey-on-mars/" }
     }
    ],
    "discuss": "Engineers tested many fixes for the mole. When should a team decide to stop trying?"
@@ -196,47 +132,29 @@
    "sol": 538,
    "date": "2020",
    "title": "The panels are getting dusty",
-   "telemetry": [
-    "ARRAY OUTPUT: DECLINING",
-    "DUST OPACITY: SEASONAL",
-    "NO CLEANING EVENTS DETECTED"
-   ],
+   "telemetry": ["ARRAY OUTPUT: DECLINING", "DUST OPACITY: SEASONAL", "NO CLEANING EVENTS DETECTED"],
    "text": "Dust settles on the arrays every sol. Spirit and Opportunity were sometimes cleaned by passing whirlwinds. InSight has detected many whirlwinds — none have cleaned it. The team needs an idea.",
-   "drift": {
-    "dust": 28,
-    "battery": -18
-   },
+   "drift": { "dust": 28, "battery": -18 },
    "choices": [
-    {
-     "id": "pulse",
-     "label": "Pulse the array deployment motors to shake the dust off",
-     "real": true,
-     "effects": {
-      "battery": -3
-     },
-     "outcome": "It was worth a try. The motors last used when the panels opened are pulsed — but the dust does not come off. The team keeps thinking.",
-     "source": {
-      "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost",
-      "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/"
-     }
-    },
     {
      "id": "devil",
      "label": "Do nothing and wait for a dust devil to clean the panels",
      "real": false,
-     "effects": {
-      "dust": 8,
-      "battery": -6
-     },
+     "effects": { "dust": 8, "battery": -6 },
      "outcome": "Whirlwinds pass by the lander, recorded by its weather sensors. The panels stay dusty.",
      "fact": {
       "title": "Why not to rely on luck",
       "text": "InSight’s weather sensors detected many passing whirlwinds, but none of them cleared any dust from its panels — unlike the luckier Spirit and Opportunity rovers.",
-      "source": {
-       "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm",
-       "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/"
-      }
+      "source": { "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm", "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/" }
      }
+    },
+    {
+     "id": "pulse",
+     "label": "Pulse the array deployment motors to try shaking dust off",
+     "real": true,
+     "effects": { "battery": -3 },
+     "outcome": "It was worth a try. The motors last used when the panels opened are pulsed — but the dust does not come off. The team keeps thinking.",
+     "source": { "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/" }
     }
    ],
    "discuss": "How could scientists tell the difference between a marsquake and a gust of wind?"
@@ -246,66 +164,41 @@
    "sol": 884,
    "date": "22 May 2021",
    "title": "Fight dust with dirt",
-   "telemetry": [
-    "APHELION APPROACHING",
-    "WIND: NW, UP TO 6 M/S AT NOON",
-    "ARM: AVAILABLE"
-   ],
+   "telemetry": ["APHELION APPROACHING", "WIND: NW, UP TO 6 M/S AT NOON", "ARM: AVAILABLE"],
    "text": "Mars is near aphelion — the least sunlight of the year — and energy is falling. A scientist proposes something strange: use the arm’s scoop to pour sand into the wind so that bouncing sand grains knock the fine dust off a panel.",
-   "drift": {
-    "dust": 22,
-    "battery": -15
-   },
+   "drift": { "dust": 22, "battery": -15 },
    "choices": [
     {
-     "id": "trickle",
-     "label": "Trickle sand near — not on — a panel at noon, the windiest time",
-     "real": true,
-     "effects": {
-      "dust": -6,
-      "battery": 6
-     },
-     "outcome": "As sand blows across the panel, the power jumps: about 30 watt-hours more per sol. The team repeats it on 5 June. It buys a few extra weeks of science.",
-     "science": 1,
-     "source": {
-      "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost",
-      "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/"
-     }
-    },
-    {
      "id": "dump",
-     "label": "Dump a full scoop straight onto the panel",
+     "label": "Dump a full scoop of sand straight onto the panel",
      "real": false,
-     "effects": {
-      "dust": 6,
-      "battery": -6,
-      "integrity": -5
-     },
+     "effects": { "dust": 6, "battery": -6, "integrity": -5 },
      "outcome": "The sand mostly stays where it lands. The panel is now covered with sand as well as dust.",
      "fact": {
       "title": "Why the sand went next to the panel",
       "text": "The idea was saltation: sand grains hop in the wind and strike the dust, carrying the finer particles away. The team deliberately trickled sand near, not directly on top of, the panels, at the windiest time of day.",
-      "source": {
-       "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost",
-       "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/"
-      }
+      "source": { "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/" }
      }
     },
     {
+     "id": "trickle",
+     "label": "Trickle sand near the panel at the windiest time of day",
+     "real": true,
+     "effects": { "dust": -6, "battery": 6 },
+     "outcome": "As sand blows across the panel, the power jumps: about 30 watt-hours more per sol. The team repeats it on 5 June. It buys a few extra weeks of science.",
+     "science": 1,
+     "source": { "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/" }
+    },
+    {
      "id": "brush",
-     "label": "Order the Ingenuity helicopter to fly over and blow the dust off",
+     "label": "Ask the Ingenuity helicopter to fly over and blow the dust off",
      "real": false,
-     "effects": {
-      "battery": -4
-     },
+     "effects": { "battery": -4 },
      "outcome": "Request denied by the simulation: Ingenuity is in Jezero Crater, thousands of kilometres away, and could not reach InSight.",
      "fact": {
       "title": "A popular idea that could not work",
       "text": "Members of the public suggested using Ingenuity’s blades to clean InSight’s panels. NASA explained that this was not an option.",
-      "source": {
-       "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost",
-       "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/"
-      }
+      "source": { "label": "NASA — NASA’s InSight Mars Lander Gets a Power Boost", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasas-insight-mars-lander-gets-a-power-boost/" }
      }
     }
    ],
@@ -317,47 +210,29 @@
    "date": "7 Jan 2022",
    "storm": true,
    "title": "Regional dust storm",
-   "telemetry": [
-    "!! SUNLIGHT DROPPING FAST",
-    "MARCI: REGIONAL STORM DETECTED",
-    "SAFE MODE TRIGGERED"
-   ],
+   "telemetry": ["!! SUNLIGHT DROPPING FAST", "MARCI: REGIONAL STORM DETECTED", "SAFE MODE TRIGGERED"],
    "text": "A large regional dust storm, first seen by the MARCI camera on Mars Reconnaissance Orbiter, darkens the sky. InSight has put itself into safe mode, suspending all but essential functions. The battery is low.",
-   "drift": {
-    "dust": 18,
-    "battery": -25
-   },
+   "drift": { "dust": 18, "battery": -25 },
    "choices": [
     {
-     "id": "ride",
-     "label": "Stay in safe mode, keep instruments off and wait for the sky to clear",
-     "real": true,
-     "effects": {
-      "battery": 8,
-      "dust": 4
-     },
-     "outcome": "Contact is re-established on 10 January: power is low but steady. On 19 January InSight exits safe mode. By February the arrays produce almost as much as before the storm.",
-     "source": {
-      "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm",
-      "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/"
-     }
-    },
-    {
      "id": "record",
-     "label": "Turn SEIS back on — storms make great seismic data!",
+     "label": "Turn the seismometer back on — a storm is a rare chance for data",
      "real": false,
-     "effects": {
-      "battery": -80
-     },
+     "effects": { "battery": -80 },
      "fail": "deadbus_storm",
      "fact": {
       "title": "Why safe mode exists",
       "text": "In safe mode a spacecraft suspends all but essential functions to protect its batteries. Drained batteries are believed to have ended NASA’s Opportunity rover during the 2018 dust storms.",
-      "source": {
-       "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm",
-       "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/"
-      }
+      "source": { "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm", "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/" }
      }
+    },
+    {
+     "id": "ride",
+     "label": "Stay in safe mode and wait for the sky to clear",
+     "real": true,
+     "effects": { "battery": 8, "dust": 4 },
+     "outcome": "Contact is re-established on 10 January: power is low but steady. On 19 January InSight exits safe mode. By February the arrays produce almost as much as before the storm.",
+     "source": { "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm", "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/" }
     }
    ],
    "discuss": "Safe mode turns off almost everything. Why is doing less sometimes the safest choice?"
@@ -367,49 +242,33 @@
    "sol": 1211,
    "date": "24 Apr 2022",
    "title": "One last picture",
-   "telemetry": [
-    "ARRAY OUTPUT ≈ 1/10 OF LANDING",
-    "ARM MOTORS: HIGH ENERGY COST"
-   ],
+   "telemetry": ["ARRAY OUTPUT ≈ 1/10 OF LANDING", "ARM MOTORS: HIGH ENERGY COST"],
    "text": "The arrays now produce roughly 500 watt-hours per sol — a tenth of what they made at landing. Moving the arm costs precious energy. The team must decide what the arm does last.",
-   "drift": {
-    "dust": 14,
-    "battery": -12
-   },
+   "drift": { "dust": 14, "battery": -12 },
    "choices": [
     {
+     "id": "scoop",
+     "label": "Keep using the arm to scoop sand onto the panels",
+     "real": false,
+     "effects": { "battery": -30 },
+     "outcome": "Each cleaning attempt now costs more energy than it returns.",
+     "fact": {
+      "title": "When a good trick stops working",
+      "text": "NASA noted that the sand-cleaning activities become increasingly difficult as available energy decreases — the arm itself needs power to move.",
+      "source": { "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm", "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/" }
+     }
+    },
+    {
      "id": "retire",
-     "label": "Take a final selfie, then park the arm in its “retirement pose”",
+     "label": "Take one last selfie, then park the arm permanently",
      "real": true,
-     "effects": {
-      "battery": 4
-     },
+     "effects": { "battery": 4 },
      "outcome": "InSight takes its final selfie on sol 1211 — the deck and panels caked in dust. In May the arm is parked for the last time, with its camera pointed at the seismometer.",
      "image": {
       "src": "img/insight-final-selfie.jpg",
       "credit": "InSight’s final selfie (PIA25287) — NASA/JPL-Caltech"
      },
-     "source": {
-      "label": "NASA Science — InSight’s Final Selfie",
-      "url": "https://science.nasa.gov/resource/insights-final-selfie/"
-     }
-    },
-    {
-     "id": "scoop",
-     "label": "Keep scooping sand onto the panels every windy sol",
-     "real": false,
-     "effects": {
-      "battery": -30
-     },
-     "outcome": "Each cleaning attempt now costs more energy than it returns.",
-     "fact": {
-      "title": "When a good trick stops working",
-      "text": "NASA noted that the sand-cleaning activities become increasingly difficult as available energy decreases — the arm itself needs power to move.",
-      "source": {
-       "label": "NASA — NASA’s InSight Sees Power Levels Stabilize After Dust Storm",
-       "url": "https://www.nasa.gov/solar-system/nasas-insight-sees-power-levels-stabilize-after-dust-storm/"
-      }
-     }
+     "source": { "label": "NASA Science — InSight’s Final Selfie", "url": "https://science.nasa.gov/resource/insights-final-selfie/" }
     }
    ],
    "discuss": "Why did the team choose to take a final selfie instead of more science? Who was it for?"
@@ -419,48 +278,31 @@
    "sol": 1215,
    "date": "May 2022",
    "title": "What gets the last watts?",
-   "telemetry": [
-    "NON-SEISMIC INSTRUMENTS: OFF",
-    "SEIS: ON",
-    "POWER MARGIN: THIN"
-   ],
+   "telemetry": ["NON-SEISMIC INSTRUMENTS: OFF", "SEIS: ON", "POWER MARGIN: THIN"],
    "text": "There is only enough energy for one priority. Night is when winds are low and marsquakes are easiest to hear.",
-   "drift": {
-    "dust": 3,
-    "battery": -6
-   },
+   "drift": { "dust": 3, "battery": -6 },
    "choices": [
     {
-     "id": "seisnight",
-     "label": "Prioritise the seismometer, running at selected times such as night",
-     "real": true,
-     "effects": {
-      "battery": -4
-     },
-     "outcome": "On 4 May 2022 — sol 1222 — SEIS records the largest quake ever detected on another planet, first estimated at magnitude 5 (later analysis: 4.7). Its waves keep ringing for hours.",
-     "science": 3,
-     "source": {
-      "label": "NASA — NASA’s InSight Records Monster Quake on Mars",
-      "url": "https://www.nasa.gov/missions/insight/nasas-insight-records-monster-quake-on-mars/"
-     }
-    },
-    {
      "id": "seisoff",
-     "label": "Switch SEIS off now to stretch the mission’s lifetime",
+     "label": "Switch the seismometer off now to save power longer",
      "real": false,
-     "effects": {
-      "battery": 6
-     },
+     "effects": { "battery": 6 },
      "outcome": "The lander lives quietly — and on sol 1222 the biggest marsquake ever detected passes beneath a sleeping instrument.",
      "science": -3,
      "fact": {
       "title": "The quake you would have missed",
       "text": "On sol 1222 InSight detected an estimated magnitude 5 marsquake, the largest observed on another planet. A peer-reviewed analysis later gave a moment magnitude of 4.7, with about five times the seismic moment of the previous largest event.",
-      "source": {
-       "label": "Kawamura et al. (2023), Geophysical Research Letters — S1222a",
-       "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL101543"
-      }
+      "source": { "label": "Kawamura et al. (2023), Geophysical Research Letters — S1222a", "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL101543" }
      }
+    },
+    {
+     "id": "seisnight",
+     "label": "Keep the seismometer on during quiet nighttime periods",
+     "real": true,
+     "effects": { "battery": -4 },
+     "outcome": "On 4 May 2022 — sol 1222 — SEIS records the largest quake ever detected on another planet, first estimated at magnitude 5 (later analysis: 4.7). Its waves keep ringing for hours.",
+     "science": 3,
+     "source": { "label": "NASA — NASA’s InSight Records Monster Quake on Mars", "url": "https://www.nasa.gov/missions/insight/nasas-insight-records-monster-quake-on-mars/" }
     }
    ],
    "discuss": "If you could keep only one instrument on, which one would you pick and why?"
@@ -471,30 +313,18 @@
    "date": "15 Dec 2022",
    "final": true,
    "title": "Listening for a heartbeat",
-   "telemetry": [
-    "SEIS: OFF (END OF SCIENCE)",
-    "COMMS: INTERMITTENT",
-    "BATTERY: CRITICAL"
-   ],
+   "telemetry": ["SEIS: OFF (END OF SCIENCE)", "COMMS: INTERMITTENT", "BATTERY: CRITICAL"],
    "text": "After the summer, the seismometer was switched off. InSight has been sending occasional images and health data. On 15 December 2022 it talks to Earth one more time.",
-   "drift": {
-    "dust": 6,
-    "battery": -40
-   },
+   "drift": { "dust": 6, "battery": -40 },
    "choices": [
     {
      "id": "listen",
      "label": "Keep listening — declare the end only after two missed passes",
      "real": true,
-     "effects": {
-      "battery": -100
-     },
+     "effects": { "battery": -100 },
      "fail": "real_end",
      "outcome": "Two consecutive contact attempts fail. Engineers conclude the batteries are exhausted — “dead bus”. NASA retires InSight on 21 December 2022 but keeps listening, just in case.",
-     "source": {
-      "label": "NASA — NASA Retires InSight Mars Lander Mission After Years of Science",
-      "url": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
-     }
+     "source": { "label": "NASA — NASA Retires InSight Mars Lander Mission After Years of Science", "url": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/" }
     }
    ],
    "discuss": "InSight is still on Mars. Should old landers be treated like museums, historic sites, or just hardware?"
@@ -522,44 +352,17 @@
  },
  "legacy": {
   "timeline": [
-   [
-    "26 Nov 2018",
-    "Landed in Elysium Planitia; solar arrays opened the same day."
-   ],
-   [
-    "19 Dec 2018",
-    "Seismometer placed on the surface by the robotic arm."
-   ],
-   [
-    "28 Feb 2019 – 9 Jan 2021",
-    "Heat probe (“mole”) campaign; ended after it could not dig deeper."
-   ],
-   [
-    "22 May 2021",
-    "Sand-trickling trick gave ~30 Wh per sol of extra power."
-   ],
-   [
-    "7–19 Jan 2022",
-    "Safe mode during a regional dust storm."
-   ],
-   [
-    "24 Apr 2022",
-    "Final selfie (sol 1211)."
-   ],
-   [
-    "4 May 2022",
-    "Largest marsquake recorded (sol 1222)."
-   ],
-   [
-    "15 Dec 2022",
-    "Last contact. Mission declared over after two missed passes."
-   ]
+   ["26 Nov 2018", "Landed in Elysium Planitia; solar arrays opened the same day."],
+   ["19 Dec 2018", "Seismometer placed on the surface by the robotic arm."],
+   ["28 Feb 2019 – 9 Jan 2021", "Heat probe (“mole”) campaign; ended after it could not dig deeper."],
+   ["22 May 2021", "Sand-trickling trick gave ~30 Wh per sol of extra power."],
+   ["7–19 Jan 2022", "Safe mode during a regional dust storm."],
+   ["24 Apr 2022", "Final selfie (sol 1211)."],
+   ["4 May 2022", "Largest marsquake recorded (sol 1222)."],
+   ["15 Dec 2022", "Last contact. Mission declared over after two missed passes."]
   ],
   "where": {
-   "coords": [
-    4.502384,
-    135.623447
-   ],
+   "coords": [4.502384, 135.623447],
    "label": "InSight lander, Elysium Planitia",
    "coordSource": {
     "label": "Golombek et al. (2020), Earth and Space Science — Location of the InSight lander",
@@ -577,41 +380,23 @@
    {
     "title": "2.4 million names",
     "text": "Two silicon chips carrying about 2.4 million names submitted by the public were attached to the lander and remain on Mars.",
-    "source": {
-     "label": "NASA JPL — More Than 2.4 Million Names Are Going to Mars",
-     "url": "https://www.jpl.nasa.gov/news/more-than-24-million-names-are-going-to-mars/"
-    }
+    "source": { "label": "NASA JPL — More Than 2.4 Million Names Are Going to Mars", "url": "https://www.jpl.nasa.gov/news/more-than-24-million-names-are-going-to-mars/" }
    },
    {
     "title": "SEIS on the ground",
     "text": "The French-built seismometer (CNES) still sits under its wind and thermal shield beside the lander.",
-    "source": {
-     "label": "NASA — InSight Records Monster Quake",
-     "url": "https://www.nasa.gov/missions/insight/nasas-insight-records-monster-quake-on-mars/"
-    }
+    "source": { "label": "NASA — InSight Records Monster Quake", "url": "https://www.nasa.gov/missions/insight/nasas-insight-records-monster-quake-on-mars/" }
    },
    {
     "title": "The mole",
     "text": "DLR’s heat probe is buried just below the surface, its top 2–3 cm underground.",
-    "source": {
-     "label": "NASA — InSight’s ‘Mole’ Ends Its Journey",
-     "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasa-insights-mole-ends-its-journey-on-mars/"
-    }
+    "source": { "label": "NASA — InSight’s ‘Mole’ Ends Its Journey", "url": "https://www.nasa.gov/centers-and-facilities/jpl/nasa-insights-mole-ends-its-journey-on-mars/" }
    }
   ],
   "sources": [
-   {
-    "label": "NASA Science — InSight Lander mission page",
-    "url": "https://science.nasa.gov/mission/insight/"
-   },
-   {
-    "label": "NASA JPL — InSight still hunting marsquakes as power levels diminish (5,000 → 500 Wh per sol)",
-    "url": "https://www.jpl.nasa.gov/news/nasas-insight-still-hunting-marsquakes-as-power-levels-diminish/"
-   },
-   {
-    "label": "NASA — NASA Retires InSight Mars Lander Mission",
-    "url": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
-   }
+   { "label": "NASA Science — InSight Lander mission page", "url": "https://science.nasa.gov/mission/insight/" },
+   { "label": "NASA JPL — InSight still hunting marsquakes as power levels diminish (5,000 → 500 Wh per sol)", "url": "https://www.jpl.nasa.gov/news/nasas-insight-still-hunting-marsquakes-as-power-levels-diminish/" },
+   { "label": "NASA — NASA Retires InSight Mars Lander Mission", "url": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/" }
   ]
  }
 }
