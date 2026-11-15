@@ -25,14 +25,19 @@ export async function openCard(id) {
   const modal = $('#modal'); const box = $('#modal-content'); modal.dataset.card = id;
   const f = factorById[o.factor];
   box.innerHTML = `<article class="story-card">
-    <div><div class="viewer" id="card-viewer" role="img" aria-label="3D model of ${esc(o.name)} (${isNasaModel(o.model) ? 'NASA 3D Resources model' : 'simplified procedural reconstruction'}). Drag to rotate."></div>
-      <p class="small muted">${isNasaModel(o.model) ? '3D model: NASA 3D Resources (public domain)' : 'Simplified procedural 3D reconstruction — not an official model'} · drag to rotate</p></div>
-    <div><p class="eyebrow">${esc(PLACE_LABEL[o.place])} · ${esc(o.date || String(o.year))} · ${kindLabel(o)}</p>
-      <h2 id="modal-title" style="font-size:2rem">${esc(o.name)}</h2>
-      <p><span class="badge">${esc(o.agency)}</span> ${f ? `<span class="badge nasa">${icon(f.icon, 'ic badge-ic')} ${esc(f.title)}</span>` : ''}</p>
-      <p class="lead-s">${esc(o.summary)}</p><p>${esc(o.story)}</p>
-      <dl class="facts">${(o.facts || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}${o.coords ? `<dt>Coordinates</dt><dd>${o.coords[0].toFixed(3)}°, ${o.coords[1].toFixed(3)}°</dd>` : ''}<dt>Status</dt><dd>${esc(o.status)}</dd></dl>
-      <div class="card-actions">${o.coords && ['moon', 'mars', 'earth'].includes(o.place) ? `<button class="btn btn-primary small-btn" data-map="${o.id}">Show on the ${esc(PLACE_LABEL[o.place])} map</button>` : ''}
+  <div>
+    <div class="viewer" id="card-viewer" role="img" aria-label="3D model of ${esc(o.name)} (${isNasaModel(o.model) ? 'NASA 3D Resources model' : 'simplified procedural reconstruction'}). Drag to rotate."></div>
+    <p class="small muted">${isNasaModel(o.model) ? '3D model: NASA 3D Resources (public domain)' : 'Simplified procedural 3D reconstruction — not an official model'} · drag to rotate</p>
+    <h3 style="font-size:0.95rem;margin:0.8rem 0 0.35rem">Sources</h3>
+    <ul class="srcs">${(o.sources || []).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('')}</ul>
+  </div>
+  <div>
+    <p class="eyebrow">${esc(PLACE_LABEL[o.place])} · ${esc(o.date || String(o.year))} · ${kindLabel(o)}</p>
+    <h2 id="modal-title" style="font-size:2rem">${esc(o.name)}</h2>
+    <p><span class="badge">${esc(o.agency)}</span> ${f ? `<span class="badge nasa">${icon(f.icon, 'ic badge-ic')} ${esc(f.title)}</span>` : ''}</p>
+    <p class="lead-s">${esc(o.summary)}</p><p>${esc(o.story)}</p>
+    <dl class="facts">${(o.facts || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}${o.coords ? `<dt>Coordinates</dt><dd>${o.coords[0].toFixed(3)}°, ${o.coords[1].toFixed(3)}°</dd>` : ''}<dt>Status</dt><dd>${esc(o.status)}</dd></dl>
+    <div class="card-actions">${o.coords && ['moon', 'mars', 'earth'].includes(o.place) ? `<button class="btn btn-primary small-btn" data-map="${o.id}">Show on the ${esc(PLACE_LABEL[o.place])} map</button>`
         ${o.campaign ? `<a class="btn btn-ghost small-btn" href="#game" data-play="${o.campaign}">▶ Play this mission</a>` : ''}</div>
       <h3 style="font-size:1rem;margin-top:1rem">Sources</h3><ul class="srcs">${(o.sources || []).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('')}</ul>
     </div></article>`;
