@@ -149,14 +149,14 @@ The core experience runs as a static website. **No Supabase project or API key i
 The implementation lives in [`supabase/functions/pip-chat/index.ts`](https://github.com/CodemicronX/nasa-Avantgarde/blob/main/supabase/functions/pip-chat/index.ts).
 
 1. Deploy the `pip-chat` Edge Function to your own Supabase project.
-2. Store `PIP_OPENROUTER_KEY` and/or `PIP_GEMINI_KEY` as **server-side secrets**.
+2. Store `PIP_OPENROUTER_KEY` as a **server-side secret**. Pip uses the same OpenRouter key for NVIDIA Nemotron 3 Ultra and Google Gemma 4 26B A4B (4B active parameters).
 3. Update `ENDPOINT` in `src/pip-chat.js` to point to your function.
 4. Update `ALLOWED_ORIGINS` in the function for your deployment. For local development, include the exact local origin, such as `http://localhost:5173`.
 5. Configure function access to match the current anonymous browser request, which sends JSON without an authorization header.
 
-The frontend currently caps questions at **300 characters**; the function caps them at **400** and accepts a short conversation history. The backend includes origin checks, timeouts, provider fallbacks, and in-memory request limits. These limits apply within a function instance rather than a shared persistent rate-limit store.
+The frontend currently caps questions at **300 characters**; the function caps them at **400** and accepts a short conversation history. The backend includes origin checks, timeouts, adaptive model selection, hedged fallbacks, and in-memory request limits and model statistics. These limits and statistics apply within a function instance rather than a shared persistent store. A hedged request may call both models and consume quota for both.
 
-The provider model list is maintained in the function. Availability can change. When the AI request fails, the frontend uses its built-in fact list.
+The OpenRouter model list is maintained in the function. Availability can change. The backend learns model latency and failures per instance, starts a backup after a short delay or primary failure, and returns the first successful response. When both model requests fail, the frontend uses its built-in fact list.
 
 **Never put provider keys in frontend code or `VITE_*` variables.** The production endpoint currently allows the project's GitHub Pages origin, so a local fork should configure its own backend to use AI replies.
 
@@ -173,7 +173,7 @@ The provider model list is maintained in the function. Availability can change. 
 | Motion | GSAP / ScrollTrigger and Lenis |
 | Orbital calculations | satellite.js with a Web Worker |
 | Typography | Syne, Epilogue, IBM Plex Mono via Fontsource |
-| Optional AI | Supabase Edge Function → OpenRouter / Gemini |
+| Optional AI | Supabase Edge Function → OpenRouter (Nemotron / Gemma 4 adaptive fallback) |
 | Hosting | GitHub Pages via GitHub Actions |
 
 Models and textures are cached by a service worker to improve repeat visits. This is **asset caching**, not a guarantee that every feature works offline.

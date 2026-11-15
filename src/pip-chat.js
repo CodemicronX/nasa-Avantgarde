@@ -1,4 +1,4 @@
-// "Ask Pip": a tiny chat box. Answers come from an AI model (Google Gemini, or OpenRouter) through our own
+// "Ask Pip": a tiny chat box. Answers come from OpenRouter through our own
 // Supabase Edge Function (the API key never reaches the browser). The function grounds every answer in a knowledge
 // base generated from this site's data (scripts/build-pip-kb.mjs) and returns link chips that open cards/sections.
 // If the AI is unavailable, Pip answers from a small built-in fact list instead.
