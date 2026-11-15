@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "vite site",
-    "kb": "node site/scripts/build-pip-kb.mjs",
-    "build": "node site/scripts/build-pip-kb.mjs && vite build site --emptyOutDir false --outDir ../",
+    "kb": "node scripts/build-pip-kb.mjs",
+    "build": "node scripts/build-pip-kb.mjs && vite build site --emptyOutDir false --outDir ../",
     "preview": "vite preview site"
   },
   "keywords": [],
